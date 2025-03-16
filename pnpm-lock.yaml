@@ -11,9 +11,15 @@ importers:
       '@heroicons/react':
         specifier: 2.0.18
         version: 2.0.18(react@18.2.0)
+      '@radix-ui/react-dialog':
+        specifier: ^1.1.6
+        version: 1.1.6(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@radix-ui/react-dropdown-menu':
         specifier: ^2.1.6
         version: 2.1.6(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@radix-ui/react-label':
+        specifier: ^2.1.2
+        version: 2.1.2(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@radix-ui/react-slot':
         specifier: ^1.1.2
         version: 1.1.2(@types/react@18.2.39)(react@18.2.0)
@@ -788,6 +794,19 @@ packages:
       '@types/react':
         optional: true
 
+  '@radix-ui/react-dialog@1.1.6':
+    resolution: {integrity: sha512-/IVhJV5AceX620DUJ4uYVMymzsipdKBzo3edo+omeskCKGm9FRHM0ebIdbPnlQVJqyuHbuBltQUOG2mOTq2IYw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
+
   '@radix-ui/react-direction@1.1.0':
     resolution: {integrity: sha512-BUuBvgThEiAXh2DWu93XsT+a3aWrGqolGlqqw5VU1kG7p/ZH2cuDlM1sRLNnY3QcBS69UIz2mcKhMxDsdewhjg==}
     peerDependencies:
@@ -852,6 +871,19 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
     peerDependenciesMeta:
       '@types/react':
+        optional: true
+
+  '@radix-ui/react-label@2.1.2':
+    resolution: {integrity: sha512-zo1uGMTaNlHehDyFQcDZXRJhUPDuukcnHz0/jnrup0JA6qL+AFpAnty+7VKa9esuU5xTblAZzTGYJKSKaBxBhw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
         optional: true
 
   '@radix-ui/react-menu@2.1.6':
@@ -3858,6 +3890,28 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.2.39
 
+  '@radix-ui/react-dialog@1.1.6(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@radix-ui/primitive': 1.1.1
+      '@radix-ui/react-compose-refs': 1.1.1(@types/react@18.2.39)(react@18.2.0)
+      '@radix-ui/react-context': 1.1.1(@types/react@18.2.39)(react@18.2.0)
+      '@radix-ui/react-dismissable-layer': 1.1.5(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@radix-ui/react-focus-guards': 1.1.1(@types/react@18.2.39)(react@18.2.0)
+      '@radix-ui/react-focus-scope': 1.1.2(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@radix-ui/react-id': 1.1.0(@types/react@18.2.39)(react@18.2.0)
+      '@radix-ui/react-portal': 1.1.4(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@radix-ui/react-presence': 1.1.2(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@radix-ui/react-primitive': 2.0.2(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@radix-ui/react-slot': 1.1.2(@types/react@18.2.39)(react@18.2.0)
+      '@radix-ui/react-use-controllable-state': 1.1.0(@types/react@18.2.39)(react@18.2.0)
+      aria-hidden: 1.2.4
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      react-remove-scroll: 2.6.3(@types/react@18.2.39)(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 18.2.39
+      '@types/react-dom': 18.2.17
+
   '@radix-ui/react-direction@1.1.0(@types/react@18.2.39)(react@18.2.0)':
     dependencies:
       react: 18.2.0
@@ -3915,6 +3969,15 @@ snapshots:
       react: 18.2.0
     optionalDependencies:
       '@types/react': 18.2.39
+
+  '@radix-ui/react-label@2.1.2(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
+    dependencies:
+      '@radix-ui/react-primitive': 2.0.2(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    optionalDependencies:
+      '@types/react': 18.2.39
+      '@types/react-dom': 18.2.17
 
   '@radix-ui/react-menu@2.1.6(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)':
     dependencies:
@@ -4584,7 +4647,9 @@ snapshots:
   best-saas-kit-pro@file:(@babel/core@7.24.5)(@types/react-dom@18.2.17)(@types/react@18.2.39)(tailwindcss@3.3.5)(ws@8.18.1):
     dependencies:
       '@heroicons/react': 2.0.18(react@18.2.0)
+      '@radix-ui/react-dialog': 1.1.6(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@radix-ui/react-dropdown-menu': 2.1.6(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+      '@radix-ui/react-slot': 1.1.2(@types/react@18.2.39)(react@18.2.0)
       '@react-email/components': 0.0.31(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@react-email/render': 1.0.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@stripe/stripe-js': 5.10.0

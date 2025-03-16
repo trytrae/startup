@@ -22,6 +22,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import React from "react"
+import { DialogDemo } from "./dialog"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -55,8 +56,8 @@ export function DataTable<TData, TValue>({
     return (
 
         <div>
-            <div className="flex items-center py-4">
-                <Input
+            <div className="flex items-center justify-between py-4">
+                <Input 
                     placeholder="Filter task name..."
                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
@@ -64,6 +65,7 @@ export function DataTable<TData, TValue>({
                     }
                     className="max-w-sm"
                 />
+                <DialogDemo/>
             </div>
             <div className="rounded-md border">
                 <Table>

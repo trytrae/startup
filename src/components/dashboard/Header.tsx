@@ -110,7 +110,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="text-white font-bold text-xl">
-              SAAS Kit
+              *********************
             </Link>
           </div>
 
@@ -157,12 +157,17 @@ export default function Header() {
                         Dashboard
                       </Link>
                       <Link
-                        href="/settings"
+                        href="/tasks"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setIsMenuOpen(false)}
                       >
-                        Settings
+                        Tasks
                       </Link>
+                      <button
+                                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+>
+                        l1213
+                      </button>
                       <button
                         onClick={() => {
                           setIsMenuOpen(false)
