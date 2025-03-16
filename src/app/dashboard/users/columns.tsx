@@ -16,49 +16,29 @@ import {
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
-  id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
-  email: string
-}
-
  
-export type Task = {
+ 
+export type User = {
     id: string
     name: string
-    type: "User demand research" | "Product proof-of-concept research"
-    user_portraits: string
-    product_portraits: string
-    status: "pending" | "processing" | "success" | "failed"
+    amount: number
     create_at: string
   }
 
-export const columns: ColumnDef<Task>[] = [
+export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "id",
-    header: "Task Id",
+    header: "User Id",
   },
   {
     accessorKey: "name",
-    header: "Task Name",
+    header: "User Name",
   },
   {
-    accessorKey: "type",
-    header: "Task Type",
+    accessorKey: "amount",
+    header: "User Amount",
   },
-  {
-    accessorKey: "user_portraits",
-    header: "User Portraits",
-  },
-  {
-    accessorKey: "product_portraits",
-    header: "Product Portraits",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
+   
   {
     accessorKey: "create_at", 
     header: ({ column }) => {
@@ -104,7 +84,7 @@ export const columns: ColumnDef<Task>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Task Report
+              Check Details
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Edit</DropdownMenuItem>

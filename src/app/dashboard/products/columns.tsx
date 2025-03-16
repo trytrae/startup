@@ -16,41 +16,31 @@ import {
 
  
  
-export type Task = {
+export type Product = {
     id: string
     name: string
-    type: "User demand research" | "Product proof-of-concept research"
-    user_portraits: string
-    product_portraits: string
-    status: "pending" | "processing" | "success" | "failed"
+    image: string
+    description: string
     create_at: string
   }
 
-export const columns: ColumnDef<Task>[] = [
+export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "id",
-    header: "Task Id",
+    header: "Product Id",
   },
   {
     accessorKey: "name",
-    header: "Task Name",
+    header: "Product Name",
   },
   {
-    accessorKey: "type",
-    header: "Task Type",
+    accessorKey: "image",
+    header: "Product Image",
   },
   {
-    accessorKey: "user_portraits",
-    header: "User Portraits",
-  },
-  {
-    accessorKey: "product_portraits",
-    header: "Product Portraits",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
+    accessorKey: "description",
+    header: "Product Description",
+  },  
   {
     accessorKey: "create_at", 
     header: ({ column }) => {
@@ -96,7 +86,7 @@ export const columns: ColumnDef<Task>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Task Report
+              Check Details
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Edit</DropdownMenuItem>
