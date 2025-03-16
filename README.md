@@ -29,17 +29,17 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/zainulabedeen123/best-saas-kit.git
+   git clone  
    ```
 
 2. **Navigate to Project Directory**
    ```bash
-   cd best-saas-kit
+   cd 
    ```
 
 3. **Install Dependencies**
    ```bash
-   npm install
+   pnpm i
    ```
 
 4. **Set Up Environment Variables**
@@ -68,7 +68,7 @@ Before you begin, ensure you have the following installed:
 
 5. **Run Development Server**
    ```bash
-   npm run dev
+   pnpm dev
    ```
 
 6. **Open Your Browser**
@@ -121,20 +121,8 @@ best-saas-kit/
   - Husky for Git hooks
   - lint-staged for staged files linting
 
-## 🤝 Contributing
-
-We welcome contributions! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
+ 
+ 
 ## 🙏 Acknowledgments
 
 - [Next.js](https://nextjs.org/)
@@ -144,10 +132,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Stripe](https://stripe.com/)
 - [Resend](https://resend.com/)
 
-## 💬 Support
-
-If you have any questions or need help, please open an issue or contact us at info@themetaversecompany.uk
-
----
-
-Built with ❤️ by [Zain UI Abedeen](https://github.com/zainulabedeen123)
+ 
