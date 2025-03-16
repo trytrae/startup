@@ -22,7 +22,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import React from "react"
-
+import { DialogNewProduct } from "./dialog" 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
@@ -55,7 +55,7 @@ export function DataTable<TData, TValue>({
     return (
 
         <div>
-            <div className="flex items-center justify-between  py-4">
+            <div className="flex items-center justify-between py-4">
                 <Input
                     placeholder="Filter product name..."
                     value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -64,6 +64,7 @@ export function DataTable<TData, TValue>({
                     }
                     className="max-w-sm"
                 />
+                <DialogNewProduct />
             </div>
             <div className="rounded-md border">
                 <Table>

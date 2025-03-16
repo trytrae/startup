@@ -14,8 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
  
+import { DialogNewProduct } from "./dialog"  // 在products的相关文件中
+import { createClient } from '@/utils/supabase/client'
+import { useRouter } from "next/navigation"
 
- 
  
 export type Product = {
     id: string
@@ -29,18 +31,34 @@ export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "id",
     header: "Product Id",
+    cell: ({ row }) => {
+      const value = row.getValue("id") as string
+      return <div className="min-w-[100px] w-full truncate">{value}</div>
+    }
   },
   {
     accessorKey: "name",
     header: "Product Name",
+    cell: ({ row }) => {
+      const value = row.getValue("name") as string
+      return <div className="min-w-[100px] w-full truncate">{value}</div>
+    }
   },
   {
     accessorKey: "image",
     header: "Product Image",
+    cell: ({ row }) => {
+      const value = row.getValue("image") as string
+      return <div className="min-w-[100px] w-full truncate">{value}</div>
+    }
   },
   {
     accessorKey: "description",
     header: "Product Description",
+    cell: ({ row }) => {
+      const value = row.getValue("description") as string
+      return <div className="min-w-[100px] w-full truncate">{value}</div>
+    }
   },  
   {
     accessorKey: "create_at", 
@@ -71,12 +89,29 @@ export const columns: ColumnDef<Product>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original
- 
+      const product = row.original
+      const router = useRouter()
+      
+      const handleDelete = async () => {
+        try {
+          const supabase = await createClient()
+          const { error } = await supabase
+            .from('products')
+            .delete()
+            .eq('id', product.id)
+
+          if (error) throw error
+          
+          router.refresh()
+        } catch (error) {
+          console.error('Error deleting product:', error)
+        }
+      }
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Label  className="h-8 w-8 p-0">
+            <Label className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Label>
@@ -84,13 +119,18 @@ export const columns: ColumnDef<Product>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(product.id)}
             >
               Check Details
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DialogNewProduct product={product} mode="edit" />
+            <DropdownMenuItem 
+              onClick={handleDelete}
+              className="text-red-600 focus:text-red-600"
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

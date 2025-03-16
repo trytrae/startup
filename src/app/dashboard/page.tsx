@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 import Chat from '@/components/dashboard/Chat'
 
 export default function Dashboard() {
   const [profile, setProfile] = useState<any>(null)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   useEffect(() => {
     fetchProfile()
@@ -110,4 +110,4 @@ export default function Dashboard() {
       </div>
     </div>
   )
-} 
+}

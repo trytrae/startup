@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import Stripe from 'stripe'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/server'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-11-20.acacia',
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       webhookSecret
     )
 
-    const supabase = createClientComponentClient()
+    const supabase = await createClient()
 
     // Handle the event
     switch (event.type) {

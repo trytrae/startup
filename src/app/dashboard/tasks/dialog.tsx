@@ -20,35 +20,132 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import { createClient } from "@/utils/supabase/client"
+import { useState } from "react"
+import { Task } from "./columns"
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import { useRouter } from "next/navigation"
+import { v4 as uuidv4 } from 'uuid'
 
-export function DialogNewTask() {
 
-    //supabase
+
+export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: 'create' | 'edit' }) {
+    const supabase = createClient()
+    const router = useRouter()
+    const [open, setOpen] = useState(false)
+    // 添加新的状态
+    const [users, setUsers] = useState<Array<{ id: string; name: string }>>([])
+    const [products, setProducts] = useState<Array<{ id: string; name: string }>>([])
+    
+    // 添加数据获取函数
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // 获取用户数据
+                const { data: userData, error: userError } = await supabase
+                    .from('users')
+                    .select('id, name')
+                if (userError) throw userError
+                setUsers(userData || [])
+
+                // 获取产品数据
+                const { data: productData, error: productError } = await supabase
+                    .from('products')
+                    .select('id, name')
+                if (productError) throw productError
+                setProducts(productData || [])
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
+
+        fetchData()
+    }, [])
+    const [formData, setFormData] = useState({
+        id: task?.id || uuidv4(),
+        name: task?.name || '',
+        type: task?.type || '' as Task['type'],
+        user_portraits: task?.user_portraits || '',
+        product_portraits: task?.product_portraits || '',
+        status: task?.status || 'pending' as Task['status']
+    })
+    
+    const handleSubmit = async () => {
+        try {
+            if (mode === 'edit' && task) {
+                const { error } = await supabase
+                    .from('tasks')
+                    .update(formData)
+                    .eq('id', task.id)
+
+                if (error) throw error
+            } else {
+                const { error } = await supabase
+                    .from('tasks')
+                    .insert([formData])
+
+                if (error) throw error
+            }
+            
+            // 清空表单并刷新页面
+            setFormData({
+                id: task?.id || uuidv4(),
+                name: '',
+                type: '' as Task['type'],
+                user_portraits: '',
+                product_portraits: '',
+                status: 'pending'
+            })
+            setOpen(false)  // 关闭对话框
+            router.refresh()
+        } catch (error) {
+            console.error('Error saving task:', error)
+        }
+    }
+
+    const handleInputChange = (field: string, value: string) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }))
+    }
 
     return (
-        <Dialog >
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button >Add New</Button>
+                {mode === 'create' ? (
+                    <Button>Add New</Button>
+                ) : (
+                    <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        Edit
+                    </DropdownMenuItem>
+                )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Add New Task</DialogTitle>
+                    <DialogTitle>{mode === 'create' ? 'Add New Task' : 'Edit Task'}</DialogTitle>
                     <DialogDescription>
-                        Create new task here. Click save when you're done.
+                        {mode === 'create' ? 'Create new task here.' : 'Edit task details here.'} Click save when you're done.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid w-full items-center gap-4">
                     <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="task_name" >
-                            Task Name
-                        </Label>
-                        <Input id="task_name" className="col-span-3" />
+                        <Label htmlFor="name">Task Name</Label>
+                        <Input 
+                            id="name" 
+                            className="col-span-3"
+                            value={formData.name}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                        />
                     </div>
 
                     <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="task_type">Task Type</Label>
-                        <Select>
-                            <SelectTrigger id="task_type">
+                        <Label htmlFor="type">Task Type</Label>
+                        <Select 
+                            value={formData.type} // 添加这行
+                            onValueChange={(value) => handleInputChange('type', value)}
+                        >
+                            <SelectTrigger id="type">
                                 <SelectValue placeholder="Select" />
                             </SelectTrigger>
                             <SelectContent position="popper">
@@ -57,19 +154,47 @@ export function DialogNewTask() {
                             </SelectContent>
                         </Select>
                     </div>
+
                     <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="user_id"  >
-                            User Portraits ID
-                        </Label>
-                        <Input id="user_id"  className="col-span-3" />
+                        <Label htmlFor="user_portraits">User Portraits</Label>
+                        <Select 
+                            value={formData.user_portraits}
+                            onValueChange={(value) => handleInputChange('user_portraits', value)}
+                        >
+                            <SelectTrigger id="user_portraits">
+                                <SelectValue placeholder="Select user" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {users.map(user => (
+                                    <SelectItem key={user.id} value={user.name}>
+                                        {user.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
+
                     <div className="flex flex-col space-y-1.5">
-                        <Label htmlFor="outline">Research Outline</Label>
-                        <Textarea  id="outline" placeholder="Outline of your research" />
+                        <Label htmlFor="product_portraits">Product Portraits</Label>
+                        <Select 
+                            value={formData.product_portraits}
+                            onValueChange={(value) => handleInputChange('product_portraits', value)}
+                        >
+                            <SelectTrigger id="product_portraits">
+                                <SelectValue placeholder="Select product" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {products.map(product => (
+                                    <SelectItem key={product.id} value={product.name}>
+                                        {product.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit">Save</Button>
+                    <Button type="submit" onClick={handleSubmit}>Save</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
