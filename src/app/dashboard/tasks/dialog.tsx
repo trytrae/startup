@@ -33,6 +33,34 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     const supabase = createClient()
     const router = useRouter()
     const [open, setOpen] = useState(false)
+    // 添加新的状态
+    const [users, setUsers] = useState<Array<{ id: string; name: string }>>([])
+    const [products, setProducts] = useState<Array<{ id: string; name: string }>>([])
+    
+    // 添加数据获取函数
+    React.useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // 获取用户数据
+                const { data: userData, error: userError } = await supabase
+                    .from('users')
+                    .select('id, name')
+                if (userError) throw userError
+                setUsers(userData || [])
+
+                // 获取产品数据
+                const { data: productData, error: productError } = await supabase
+                    .from('products')
+                    .select('id, name')
+                if (productError) throw productError
+                setProducts(productData || [])
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
+
+        fetchData()
+    }, [])
     const [formData, setFormData] = useState({
         id: task?.id || uuidv4(),
         name: task?.name || '',
@@ -129,22 +157,40 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
 
                     <div className="flex flex-col space-y-1.5">
                         <Label htmlFor="user_portraits">User Portraits</Label>
-                        <Input 
-                            id="user_portraits" 
-                            className="col-span-3"
+                        <Select 
                             value={formData.user_portraits}
-                            onChange={(e) => handleInputChange('user_portraits', e.target.value)}
-                        />
+                            onValueChange={(value) => handleInputChange('user_portraits', value)}
+                        >
+                            <SelectTrigger id="user_portraits">
+                                <SelectValue placeholder="Select user" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {users.map(user => (
+                                    <SelectItem key={user.id} value={user.name}>
+                                        {user.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div className="flex flex-col space-y-1.5">
                         <Label htmlFor="product_portraits">Product Portraits</Label>
-                        <Textarea 
-                            id="product_portraits" 
-                            placeholder="Product portraits details"
+                        <Select 
                             value={formData.product_portraits}
-                            onChange={(e) => handleInputChange('product_portraits', e.target.value)}
-                        />
+                            onValueChange={(value) => handleInputChange('product_portraits', value)}
+                        >
+                            <SelectTrigger id="product_portraits">
+                                <SelectValue placeholder="Select product" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {products.map(product => (
+                                    <SelectItem key={product.id} value={product.name}>
+                                        {product.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
                 <DialogFooter>
