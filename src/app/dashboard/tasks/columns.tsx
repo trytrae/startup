@@ -15,6 +15,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { createClient } from "@/utils/supabase/client"
 import { useRouter } from "next/navigation"
+import { DialogNewTask } from "./dialog"
 
 export type Task = {
     id: string
@@ -30,22 +31,42 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "id",
     header: "Task Id",
+    cell: ({ row }) => {
+      const value = row.getValue("id") as string
+      return <div className="min-w-[100px] w-full truncate">{value}</div>
+    }
   },
   {
     accessorKey: "name",
     header: "Task Name",
+    cell: ({ row }) => {
+      const value = row.getValue("name") as string
+      return <div className="min-w-[150px] w-full truncate">{value}</div>
+    }
   },
   {
     accessorKey: "type",
     header: "Task Type",
+    cell: ({ row }) => {
+      const value = row.getValue("type") as string
+      return <div className="min-w-[200px] w-full truncate">{value}</div>
+    }
   },
   {
     accessorKey: "user_portraits",
     header: "User Portraits",
+    cell: ({ row }) => {
+      const value = row.getValue("user_portraits") as string
+      return <div className="min-w-[150px] w-full truncate">{value}</div>
+    }
   },
   {
     accessorKey: "product_portraits",
     header: "Product Portraits",
+    cell: ({ row }) => {
+      const value = row.getValue("product_portraits") as string
+      return <div className="min-w-[150px] w-full truncate">{value}</div>
+    }
   },
   {
     accessorKey: "status",
@@ -116,7 +137,7 @@ export const columns: ColumnDef<Task>[] = [
               Task Report
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DialogNewTask task={task} mode="edit" />
             <DropdownMenuItem 
               onClick={handleDelete}
               className="text-red-600 focus:text-red-600"
