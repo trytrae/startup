@@ -4,7 +4,7 @@ import { CheckIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { loadStripe } from '@stripe/stripe-js'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/utils/supabase/client'
 
 // Initialize Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
@@ -31,7 +31,7 @@ const PricingCard = ({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   const handleSubscribe = async () => {
     try {
@@ -117,4 +117,4 @@ const PricingCard = ({
   )
 }
 
-export default PricingCard 
+export default PricingCard

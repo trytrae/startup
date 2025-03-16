@@ -35,24 +35,21 @@ importers:
       '@stripe/stripe-js':
         specifier: ^5.2.0
         version: 5.10.0
-      '@supabase/auth-helpers-nextjs':
-        specifier: ^0.10.0
-        version: 0.10.0(@supabase/supabase-js@2.49.1)
       '@supabase/auth-ui-react':
         specifier: ^0.4.7
         version: 0.4.7(@supabase/supabase-js@2.49.1)
       '@supabase/auth-ui-shared':
         specifier: ^0.1.8
         version: 0.1.8(@supabase/supabase-js@2.49.1)
+      '@supabase/ssr':
+        specifier: ^0.5.2
+        version: 0.5.2(@supabase/supabase-js@2.49.1)
       '@supabase/supabase-js':
         specifier: ^2.47.2
         version: 2.49.1
       '@tanstack/react-table':
         specifier: ^8.21.2
         version: 8.21.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      best-saas-kit-pro:
-        specifier: 'file:'
-        version: file:(@babel/core@7.24.5)(@types/react-dom@18.2.17)(@types/react@18.2.39)(tailwindcss@3.3.5)(ws@8.18.1)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -690,65 +687,6 @@ packages:
   '@one-ini/wasm@0.1.1':
     resolution: {integrity: sha512-XuySG1E38YScSJoMlqovLru4KTUNSjgVTIjyh7qMX6aNN5HY5Ct5LhRJdxO79JtTzKfzV/bnWpz+zquYrISsvw==}
 
-  '@oxc-resolver/binding-darwin-arm64@5.0.0':
-    resolution: {integrity: sha512-zwHAf+owoxSWTDD4dFuwW+FkpaDzbaL30H5Ltocb+RmLyg4WKuteusRLKh5Y8b/cyu7UzhxM0haIqQjyqA1iuA==}
-    cpu: [arm64]
-    os: [darwin]
-
-  '@oxc-resolver/binding-darwin-x64@5.0.0':
-    resolution: {integrity: sha512-1lS3aBNVjVQKBvZdHm13+8tSjvu2Tl1Cv4FnUyMYxqx6+rsom2YaOylS5LhDUwfZu0zAgpLMwK6kGpF/UPncNg==}
-    cpu: [x64]
-    os: [darwin]
-
-  '@oxc-resolver/binding-freebsd-x64@5.0.0':
-    resolution: {integrity: sha512-q9sRd68wC1/AJ0eu6ClhxlklVfe8gH4wrUkSyEbIYTZ8zY5yjsLY3fpqqsaCvWJUx65nW+XtnAxCGCi5AXr1Mw==}
-    cpu: [x64]
-    os: [freebsd]
-
-  '@oxc-resolver/binding-linux-arm-gnueabihf@5.0.0':
-    resolution: {integrity: sha512-catYavWsvqViYnCveQjhrK6yVYDEPFvIOgGLxnz5r2dcgrjpmquzREoyss0L2QG/J5HTTbwqwZ1kk+g56hE/1A==}
-    cpu: [arm]
-    os: [linux]
-
-  '@oxc-resolver/binding-linux-arm64-gnu@5.0.0':
-    resolution: {integrity: sha512-l/0pWoQM5kVmJLg4frQ1mKZOXgi0ex/hzvFt8E4WK2ifXr5JgKFUokxsb/oat7f5YzdJJh5r9p+qS/t3dA26Aw==}
-    cpu: [arm64]
-    os: [linux]
-    libc: [glibc]
-
-  '@oxc-resolver/binding-linux-arm64-musl@5.0.0':
-    resolution: {integrity: sha512-bx0oz/oaAW4FGYqpIIxJCnmgb906YfMhTEWCJvYkxjpEI8VKLJEL3PQevYiqDq36SA0yRLJ/sQK2fqry8AFBfA==}
-    cpu: [arm64]
-    os: [linux]
-    libc: [musl]
-
-  '@oxc-resolver/binding-linux-x64-gnu@5.0.0':
-    resolution: {integrity: sha512-4PH++qbSIhlRsFYdN1P9neDov4OGhTGo5nbQ1D7AL6gWFLo3gdZTc00FM2y8JjeTcPWEXkViZuwpuc0w5i6qHg==}
-    cpu: [x64]
-    os: [linux]
-    libc: [glibc]
-
-  '@oxc-resolver/binding-linux-x64-musl@5.0.0':
-    resolution: {integrity: sha512-mLfQFpX3/5y9oWi0b+9FbWDkL2hM0Y29653beCHiHxAdGyVgb2DsJbK74WkMTwtSz9by8vyBh8jGPZcg1yLZbQ==}
-    cpu: [x64]
-    os: [linux]
-    libc: [musl]
-
-  '@oxc-resolver/binding-wasm32-wasi@5.0.0':
-    resolution: {integrity: sha512-uEhsAZSo65qsRi6+IfBTEUUFbjg7T2yruJeLYpFfEATpm3ory5Mgo5vx3L0c2/Cz1OUZXBgp3A8x6VMUB2jT2A==}
-    engines: {node: '>=14.0.0'}
-    cpu: [wasm32]
-
-  '@oxc-resolver/binding-win32-arm64-msvc@5.0.0':
-    resolution: {integrity: sha512-8DbSso9Jp1ns8AYuZFXdRfAcdJrzZwkFm/RjPuvAPTENsm685dosBF8G6gTHQlHvULnk6o3sa9ygZaTGC/UoEw==}
-    cpu: [arm64]
-    os: [win32]
-
-  '@oxc-resolver/binding-win32-x64-msvc@5.0.0':
-    resolution: {integrity: sha512-ylppfPEg63NuRXOPNsXFlgyl37JrtRn0QMO26X3K3Ytp5HtLrMreQMGVtgr30e1l2YmAWqhvmKlCryOqzGPD/g==}
-    cpu: [x64]
-    os: [win32]
-
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
@@ -1232,17 +1170,6 @@ packages:
     resolution: {integrity: sha512-PTigkxMdMUP6B5ISS7jMqJAKhgrhZwjprDqR1eATtFfh0OpKVNp110xiH+goeVdrJ29/4LeZJR4FaHHWstsu0A==}
     engines: {node: '>=12.16'}
 
-  '@supabase/auth-helpers-nextjs@0.10.0':
-    resolution: {integrity: sha512-2dfOGsM4yZt0oS4TPiE7bD4vf7EVz7NRz/IJrV6vLg0GP7sMUx8wndv2euLGq4BjN9lUCpu6DG/uCC8j+ylwPg==}
-    deprecated: This package is now deprecated - please use the @supabase/ssr package instead.
-    peerDependencies:
-      '@supabase/supabase-js': ^2.39.8
-
-  '@supabase/auth-helpers-shared@0.7.0':
-    resolution: {integrity: sha512-FBFf2ei2R7QC+B/5wWkthMha8Ca2bWHAndN+syfuEUUfufv4mLcAgBCcgNg5nJR8L0gZfyuaxgubtOc9aW3Cpg==}
-    peerDependencies:
-      '@supabase/supabase-js': ^2.39.8
-
   '@supabase/auth-js@2.68.0':
     resolution: {integrity: sha512-odG7nb7aOmZPUXk6SwL2JchSsn36Ppx11i2yWMIc/meUO2B2HK9YwZHPK06utD9Ql9ke7JKDbwGin/8prHKxxQ==}
 
@@ -1269,6 +1196,11 @@ packages:
   '@supabase/realtime-js@2.11.2':
     resolution: {integrity: sha512-u/XeuL2Y0QEhXSoIPZZwR6wMXgB+RQbJzG9VErA3VghVt7uRfSVsjeqd7m5GhX3JR6dM/WRmLbVR8URpDWG4+w==}
 
+  '@supabase/ssr@0.5.2':
+    resolution: {integrity: sha512-n3plRhr2Bs8Xun1o4S3k1CDv17iH5QY9YcoEvXX3bxV1/5XSasA0mNXYycFmADIdtdE6BG9MRjP5CGIs8qxC8A==}
+    peerDependencies:
+      '@supabase/supabase-js': ^2.43.4
+
   '@supabase/storage-js@2.7.1':
     resolution: {integrity: sha512-asYHcyDR1fKqrMpytAS1zjyEfvxuOIp1CIXX7ji4lHHcJKqyk+sLl/Vxgm4sN6u8zvuUtae9e4kDxQP2qrwWBA==}
 
@@ -1294,6 +1226,9 @@ packages:
 
   '@tybys/wasm-util@0.9.0':
     resolution: {integrity: sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==}
+
+  '@types/cookie@0.6.0':
+    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
 
   '@types/cors@2.8.17':
     resolution: {integrity: sha512-8CGDvrBj1zgo2qE+oS3pOCyYNqCPryMWY2bGfwA0dcfopWGgxs+78df0Rs3rc9THP4JkOhLsAa+15VdpAqkcUA==}
@@ -1415,6 +1350,65 @@ packages:
 
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
+
+  '@unrs/rspack-resolver-binding-darwin-arm64@1.1.0':
+    resolution: {integrity: sha512-otdWnJrycP8Ow0rbiKKjhrW7PPeHPoIglYjBruqh75fEwQGV2EmA9oZMgD4YA6g+/hGzD0mXI26YnWL0G0SkTA==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@unrs/rspack-resolver-binding-darwin-x64@1.1.0':
+    resolution: {integrity: sha512-MqHyrtIw2ra0KZlniDITROq6rEiMsBnaJtQDYLNDv/y+pvPSXdB3VveZCwSldXJ9TrST2b3NnIbmehljjsMVhg==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@unrs/rspack-resolver-binding-freebsd-x64@1.1.0':
+    resolution: {integrity: sha512-bopyOqmtWn8np1d4iN90PE1tYHopdWwei7mK8/8mf4qhc99f7WRNXtWa1MoL5sjN3DWef3jvr0+MGnMS9MTfJA==}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@unrs/rspack-resolver-binding-linux-arm-gnueabihf@1.1.0':
+    resolution: {integrity: sha512-XldXRkQurDBXCiCuIaWcqOX6UtvjFW8O3CH/kFEZxNJISOAt+ztgyRQRxYhf+T1p18R4boripKmWKEE0uBCiYw==}
+    cpu: [arm]
+    os: [linux]
+
+  '@unrs/rspack-resolver-binding-linux-arm64-gnu@1.1.0':
+    resolution: {integrity: sha512-8zubI4MY3whPfLNHEiJ0TeSC5eSmNVWTEGAeMGALCUQtVD9TyZTd6wGwWrQVRN7ESIapWUSChkPLr+Bi13d9sQ==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@unrs/rspack-resolver-binding-linux-arm64-musl@1.1.0':
+    resolution: {integrity: sha512-+GAyOhl8KPqJsILpHTB/mMc4hfOwI4INed8VAZnSvdaL0ec3Sz/6UXEeTtucW1fWhwaP3lVlpjv2xuRhOCjehA==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@unrs/rspack-resolver-binding-linux-x64-gnu@1.1.0':
+    resolution: {integrity: sha512-0zoy6UwRFoto5boJKGjgDpA+4kv+G1kysgrAe0KVefJXOnDNJlfgcV7mOV2O9J+FqtIQsXvzmOJxDB9e1Hhbzw==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@unrs/rspack-resolver-binding-linux-x64-musl@1.1.0':
+    resolution: {integrity: sha512-XjC+aZKi+X+ma5e6yaVTvojK0v0kxfikbP1dB0klx80NjCW9KRrldiZxAo7ME8Tb4a7Fz0J6PDOVzd9tFYwkQQ==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@unrs/rspack-resolver-binding-wasm32-wasi@1.1.0':
+    resolution: {integrity: sha512-eVBK4z9VN3vahAh2+bQBl+vs9JgWEF1xeccilDcerGNkmlFHB1My5++sbeZzou+DExkioVAdfK+uVyVnHS4k7Q==}
+    engines: {node: '>=14.0.0'}
+    cpu: [wasm32]
+
+  '@unrs/rspack-resolver-binding-win32-arm64-msvc@1.1.0':
+    resolution: {integrity: sha512-ktm/CnSKOt/Wwdi2SBECLPJ+gL5oaw8LDHG4IfOQO5oT6qlIP0DaOUPrTf8g/WTlLnSp4TryDBM0B/gGla3LEw==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@unrs/rspack-resolver-binding-win32-x64-msvc@1.1.0':
+    resolution: {integrity: sha512-cdMid8RdR6XaQ5uAudzdu9Ydl3HbYjiwpsh+X01APmTZG2ph7OeaRTozW4F8ScUHkPHfrYedv9McICbHxgBvXQ==}
+    cpu: [x64]
+    os: [win32]
 
   abbrev@2.0.0:
     resolution: {integrity: sha512-6/mh1E2u2YgEsCHdY0Yx5oW+61gZU+1vXaoiHHrpKeuRNNgFvS+/jrwHiQhB5apAf5oB7UB7E19ol2R2LKH8hQ==}
@@ -1556,9 +1550,6 @@ packages:
   base64id@2.0.0:
     resolution: {integrity: sha512-lGe34o6EHj9y3Kts9R4ZYs/Gr+6N7MCaMlIFA3F1R2O5/m7K06AxfSeO5530PEERE6/WyEg3lsuyw4GHlPZHog==}
     engines: {node: ^4.5.0 || >= 5.9}
-
-  'best-saas-kit-pro@file:':
-    resolution: {directory: '', type: directory}
 
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
@@ -1950,8 +1941,8 @@ packages:
   eslint-import-resolver-node@0.3.9:
     resolution: {integrity: sha512-WFj2isz22JahUv+B788TlO3N6zL3nNJGU8CcZbPZvVEkBPaJdCV4vy5wyghty5ROFbCRnm132v8BScu5/1BQ8g==}
 
-  eslint-import-resolver-typescript@3.9.0:
-    resolution: {integrity: sha512-EUcFmaz0zAa6P2C9jAb5XDymRld8S6TURvWcIW7y+czOW+K8hrjgQgbhBsNE0J/dDZ6HLfcn70LqnIil9W+ICw==}
+  eslint-import-resolver-typescript@3.9.1:
+    resolution: {integrity: sha512-euxa5rTGqHeqVxmOHT25hpk58PxkQ4mNoX6Yun4ooGaCHAxOCojJYNvjmyeOQxj/LyW+3fulH0+xtk+p2kPPTw==}
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       eslint: '*'
@@ -2427,9 +2418,6 @@ packages:
     resolution: {integrity: sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==}
     hasBin: true
 
-  jose@4.15.9:
-    resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
-
   js-beautify@1.15.4:
     resolution: {integrity: sha512-9/KXeZUKKJwqCXUdBxFJ3vPh467OCckSBmYDwSK/EtV090K+iMJ7zx2S3HLVDIWFQdqMIsZWbnaGiba18aWhaA==}
     engines: {node: '>=14'}
@@ -2744,9 +2732,6 @@ packages:
     resolution: {integrity: sha512-qFOyK5PjiWZd+QQIh+1jhdb9LpxTF0qs7Pm8o5QHYZ0M3vKqSqzsZaEB6oWlxZ+q2sJBMI/Ktgd2N5ZwQoRHfg==}
     engines: {node: '>= 0.4'}
 
-  oxc-resolver@5.0.0:
-    resolution: {integrity: sha512-66fopyAqCN8Mx4tzNiBXWbk8asCSuxUWN62gwTc3yfRs7JfWhX/eVJCf+fUrfbNOdQVOWn+o8pAKllp76ysMXA==}
-
   p-limit@3.1.0:
     resolution: {integrity: sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==}
     engines: {node: '>=10'}
@@ -3024,6 +3009,9 @@ packages:
     deprecated: Rimraf versions prior to v4 are no longer supported
     hasBin: true
 
+  rspack-resolver@1.1.0:
+    resolution: {integrity: sha512-pJfTX5KuwbJc4agd2AQ9sMwrBxMAGkLt4/HHw5+L06WuzxjsEjg3oDKdbfn43QGq0Stw8wQ7VpZjWA/T03L0Pg==}
+
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
@@ -3056,9 +3044,6 @@ packages:
     resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
     engines: {node: '>=10'}
     hasBin: true
-
-  set-cookie-parser@2.7.1:
-    resolution: {integrity: sha512-IOc8uWeOZgnb3ptbCURJWNjWUPcO3ZnTTdzsurqERrP6nPyv+paC55vJM0LpOlT2ne+Ix+9+CRG1MNLlyZ4GjQ==}
 
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
@@ -3867,41 +3852,6 @@ snapshots:
 
   '@one-ini/wasm@0.1.1': {}
 
-  '@oxc-resolver/binding-darwin-arm64@5.0.0':
-    optional: true
-
-  '@oxc-resolver/binding-darwin-x64@5.0.0':
-    optional: true
-
-  '@oxc-resolver/binding-freebsd-x64@5.0.0':
-    optional: true
-
-  '@oxc-resolver/binding-linux-arm-gnueabihf@5.0.0':
-    optional: true
-
-  '@oxc-resolver/binding-linux-arm64-gnu@5.0.0':
-    optional: true
-
-  '@oxc-resolver/binding-linux-arm64-musl@5.0.0':
-    optional: true
-
-  '@oxc-resolver/binding-linux-x64-gnu@5.0.0':
-    optional: true
-
-  '@oxc-resolver/binding-linux-x64-musl@5.0.0':
-    optional: true
-
-  '@oxc-resolver/binding-wasm32-wasi@5.0.0':
-    dependencies:
-      '@napi-rs/wasm-runtime': 0.2.7
-    optional: true
-
-  '@oxc-resolver/binding-win32-arm64-msvc@5.0.0':
-    optional: true
-
-  '@oxc-resolver/binding-win32-x64-msvc@5.0.0':
-    optional: true
-
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -4357,17 +4307,6 @@ snapshots:
 
   '@stripe/stripe-js@5.10.0': {}
 
-  '@supabase/auth-helpers-nextjs@0.10.0(@supabase/supabase-js@2.49.1)':
-    dependencies:
-      '@supabase/auth-helpers-shared': 0.7.0(@supabase/supabase-js@2.49.1)
-      '@supabase/supabase-js': 2.49.1
-      set-cookie-parser: 2.7.1
-
-  '@supabase/auth-helpers-shared@0.7.0(@supabase/supabase-js@2.49.1)':
-    dependencies:
-      '@supabase/supabase-js': 2.49.1
-      jose: 4.15.9
-
   '@supabase/auth-js@2.68.0':
     dependencies:
       '@supabase/node-fetch': 2.6.15
@@ -4407,6 +4346,12 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@supabase/ssr@0.5.2(@supabase/supabase-js@2.49.1)':
+    dependencies:
+      '@supabase/supabase-js': 2.49.1
+      '@types/cookie': 0.6.0
+      cookie: 0.7.2
+
   '@supabase/storage-js@2.7.1':
     dependencies:
       '@supabase/node-fetch': 2.6.15
@@ -4441,6 +4386,8 @@ snapshots:
     dependencies:
       tslib: 2.8.1
     optional: true
+
+  '@types/cookie@0.6.0': {}
 
   '@types/cors@2.8.17':
     dependencies:
@@ -4587,6 +4534,41 @@ snapshots:
       eslint-visitor-keys: 3.4.3
 
   '@ungap/structured-clone@1.3.0': {}
+
+  '@unrs/rspack-resolver-binding-darwin-arm64@1.1.0':
+    optional: true
+
+  '@unrs/rspack-resolver-binding-darwin-x64@1.1.0':
+    optional: true
+
+  '@unrs/rspack-resolver-binding-freebsd-x64@1.1.0':
+    optional: true
+
+  '@unrs/rspack-resolver-binding-linux-arm-gnueabihf@1.1.0':
+    optional: true
+
+  '@unrs/rspack-resolver-binding-linux-arm64-gnu@1.1.0':
+    optional: true
+
+  '@unrs/rspack-resolver-binding-linux-arm64-musl@1.1.0':
+    optional: true
+
+  '@unrs/rspack-resolver-binding-linux-x64-gnu@1.1.0':
+    optional: true
+
+  '@unrs/rspack-resolver-binding-linux-x64-musl@1.1.0':
+    optional: true
+
+  '@unrs/rspack-resolver-binding-wasm32-wasi@1.1.0':
+    dependencies:
+      '@napi-rs/wasm-runtime': 0.2.7
+    optional: true
+
+  '@unrs/rspack-resolver-binding-win32-arm64-msvc@1.1.0':
+    optional: true
+
+  '@unrs/rspack-resolver-binding-win32-x64-msvc@1.1.0':
+    optional: true
 
   abbrev@2.0.0: {}
 
@@ -4739,52 +4721,6 @@ snapshots:
   base64-js@1.5.1: {}
 
   base64id@2.0.0: {}
-
-  best-saas-kit-pro@file:(@babel/core@7.24.5)(@types/react-dom@18.2.17)(@types/react@18.2.39)(tailwindcss@3.3.5)(ws@8.18.1):
-    dependencies:
-      '@heroicons/react': 2.0.18(react@18.2.0)
-      '@radix-ui/react-dialog': 1.1.6(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@radix-ui/react-dropdown-menu': 2.1.6(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@radix-ui/react-label': 2.1.2(@types/react-dom@18.2.17)(@types/react@18.2.39)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@radix-ui/react-slot': 1.1.2(@types/react@18.2.39)(react@18.2.0)
-      '@react-email/components': 0.0.31(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@react-email/render': 1.0.5(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      '@stripe/stripe-js': 5.10.0
-      '@supabase/auth-helpers-nextjs': 0.10.0(@supabase/supabase-js@2.49.1)
-      '@supabase/auth-ui-react': 0.4.7(@supabase/supabase-js@2.49.1)
-      '@supabase/auth-ui-shared': 0.1.8(@supabase/supabase-js@2.49.1)
-      '@supabase/supabase-js': 2.49.1
-      '@tanstack/react-table': 8.21.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      class-variance-authority: 0.7.1
-      clsx: 2.1.1
-      lucide-react: 0.468.0(react@18.2.0)
-      next: 15.2.2(@babel/core@7.24.5)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      next-themes: 0.4.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      openai: 4.87.3(ws@8.18.1)
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-email: 3.0.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      recharts: 2.15.1(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      resend: 4.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      stripe: 17.7.0
-      tailwind-merge: 2.6.0
-      tailwindcss-animate: 1.0.7(tailwindcss@3.3.5)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@opentelemetry/api'
-      - '@playwright/test'
-      - '@types/react'
-      - '@types/react-dom'
-      - babel-plugin-macros
-      - babel-plugin-react-compiler
-      - bufferutil
-      - encoding
-      - sass
-      - supports-color
-      - tailwindcss
-      - utf-8-validate
-      - ws
-      - zod
 
   binary-extensions@2.3.0: {}
 
@@ -5255,8 +5191,8 @@ snapshots:
       '@typescript-eslint/parser': 7.18.0(eslint@8.57.1)(typescript@5.3.2)
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.9.0(eslint-plugin-import@2.31.0)(eslint@8.57.1)
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-typescript@3.9.0)(eslint@8.57.1)
+      eslint-import-resolver-typescript: 3.9.1(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-typescript@3.9.1)(eslint@8.57.1)
       eslint-plugin-jsx-a11y: 6.10.2(eslint@8.57.1)
       eslint-plugin-react: 7.37.4(eslint@8.57.1)
       eslint-plugin-react-hooks: 5.2.0(eslint@8.57.1)
@@ -5275,33 +5211,33 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.9.0(eslint-plugin-import@2.31.0)(eslint@8.57.1):
+  eslint-import-resolver-typescript@3.9.1(eslint-plugin-import@2.31.0)(eslint@8.57.1):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
       debug: 4.4.0
       eslint: 8.57.1
       get-tsconfig: 4.10.0
       is-bun-module: 1.3.0
-      oxc-resolver: 5.0.0
+      rspack-resolver: 1.1.0
       stable-hash: 0.0.5
       tinyglobby: 0.2.12
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-typescript@3.9.0)(eslint@8.57.1)
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-typescript@3.9.1)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.0)(eslint@8.57.1):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.1)(eslint@8.57.1):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 7.18.0(eslint@8.57.1)(typescript@5.3.2)
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.9.0(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+      eslint-import-resolver-typescript: 3.9.1(eslint-plugin-import@2.31.0)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-typescript@3.9.0)(eslint@8.57.1):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-typescript@3.9.1)(eslint@8.57.1):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -5312,7 +5248,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.0)(eslint@8.57.1)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.3.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.9.1)(eslint@8.57.1)
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -5855,8 +5791,6 @@ snapshots:
 
   jiti@1.21.7: {}
 
-  jose@4.15.9: {}
-
   js-beautify@1.15.4:
     dependencies:
       config-chain: 1.1.13
@@ -6162,20 +6096,6 @@ snapshots:
       object-keys: 1.1.1
       safe-push-apply: 1.0.0
 
-  oxc-resolver@5.0.0:
-    optionalDependencies:
-      '@oxc-resolver/binding-darwin-arm64': 5.0.0
-      '@oxc-resolver/binding-darwin-x64': 5.0.0
-      '@oxc-resolver/binding-freebsd-x64': 5.0.0
-      '@oxc-resolver/binding-linux-arm-gnueabihf': 5.0.0
-      '@oxc-resolver/binding-linux-arm64-gnu': 5.0.0
-      '@oxc-resolver/binding-linux-arm64-musl': 5.0.0
-      '@oxc-resolver/binding-linux-x64-gnu': 5.0.0
-      '@oxc-resolver/binding-linux-x64-musl': 5.0.0
-      '@oxc-resolver/binding-wasm32-wasi': 5.0.0
-      '@oxc-resolver/binding-win32-arm64-msvc': 5.0.0
-      '@oxc-resolver/binding-win32-x64-msvc': 5.0.0
-
   p-limit@3.1.0:
     dependencies:
       yocto-queue: 0.1.0
@@ -6464,6 +6384,20 @@ snapshots:
     dependencies:
       glob: 7.2.3
 
+  rspack-resolver@1.1.0:
+    optionalDependencies:
+      '@unrs/rspack-resolver-binding-darwin-arm64': 1.1.0
+      '@unrs/rspack-resolver-binding-darwin-x64': 1.1.0
+      '@unrs/rspack-resolver-binding-freebsd-x64': 1.1.0
+      '@unrs/rspack-resolver-binding-linux-arm-gnueabihf': 1.1.0
+      '@unrs/rspack-resolver-binding-linux-arm64-gnu': 1.1.0
+      '@unrs/rspack-resolver-binding-linux-arm64-musl': 1.1.0
+      '@unrs/rspack-resolver-binding-linux-x64-gnu': 1.1.0
+      '@unrs/rspack-resolver-binding-linux-x64-musl': 1.1.0
+      '@unrs/rspack-resolver-binding-wasm32-wasi': 1.1.0
+      '@unrs/rspack-resolver-binding-win32-arm64-msvc': 1.1.0
+      '@unrs/rspack-resolver-binding-win32-x64-msvc': 1.1.0
+
   run-parallel@1.2.0:
     dependencies:
       queue-microtask: 1.2.3
@@ -6500,8 +6434,6 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.7.1: {}
-
-  set-cookie-parser@2.7.1: {}
 
   set-function-length@1.2.2:
     dependencies:
