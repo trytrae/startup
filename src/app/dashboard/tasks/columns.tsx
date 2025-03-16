@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Label } from "@/components/ui/label"
  
 
  
@@ -55,13 +56,12 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: "create_at", 
     header: ({ column }) => {
         return (
-          <Button
-            variant="ghost"
+          <Label 
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
-            Create At
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
+            <p>Create At</p>
+            <ArrowUpDown className="  h-4 w-4" />
+          </Label>
         )
       },
   }, 
@@ -86,10 +86,10 @@ export const columns: ColumnDef<Task>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button  className="h-8 w-8 p-0">
+            <Label  className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
-            </Button>
+            </Label>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>

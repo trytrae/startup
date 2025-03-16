@@ -5,6 +5,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Database } from '@/types/supabase'
+import { ModeToggle } from './Mode'
 
 interface User {
   id: string
@@ -113,7 +114,7 @@ export default function Header() {
               *********************
             </Link>
           </div>
-
+          
           <div className="flex items-center space-x-4">
             {error && (
               <div className="text-red-500 text-sm">
@@ -163,11 +164,7 @@ export default function Header() {
                       >
                         Tasks
                       </Link>
-                      <button
-                                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
->
-                        l1213
-                      </button>
+    
                       <button
                         onClick={() => {
                           setIsMenuOpen(false)

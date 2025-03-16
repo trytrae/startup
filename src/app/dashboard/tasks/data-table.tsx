@@ -22,7 +22,7 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import React from "react"
-import { DialogDemo } from "./dialog"
+import { DialogNewTask } from "./dialog"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -65,7 +65,7 @@ export function DataTable<TData, TValue>({
                     }
                     className="max-w-sm"
                 />
-                <DialogDemo/>
+                <DialogNewTask/>
             </div>
             <div className="rounded-md border">
                 <Table>
