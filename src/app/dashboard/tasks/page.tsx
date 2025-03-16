@@ -1,46 +1,33 @@
 import { Task, columns } from "./columns"
 import { DataTable } from "./data-table"
+import { createClient } from '@/utils/supabase/server'
+import { checkAuth } from '../actions'
 
 async function getData(): Promise<Task[]> {
-  // Fetch data from your API here.
-  return [
-    {
-      id: "728ed52f",
-      name: "task1",
-      type: "User demand research",
-      user_portraits: "user1",
-      product_portraits: "product1",
-      status: "success", 
-      create_at: "2025-03-18T12:00:00Z",
-    },
-    {
-      id: "72grs52f",
-      name: "task2",
-      type: "Product proof-of-concept research",
-      user_portraits: "user2",
-      product_portraits: "product2",
-      status: "failed",
-      create_at: "2025-03-13T12:00:00Z",
-    },
-    {
-      id: "se8ed52f",
-      name: "task3",
-      type: "User demand research",
-      user_portraits: "user3",
-      product_portraits: "product3",
-      status: "pending",
-      create_at: "2025-03-11T12:00:00Z",
-    },
-    {
-      id: "se8ed5vv",
-      name: "task4",
-      type: "Product proof-of-concept research",
-      user_portraits: "user4",
-      product_portraits: "product4",
-      status: "processing",
-      create_at: "2025-03-12T12:00:00Z",
-    },
-  ]
+  try {
+    // First verify authentication using the checkAuth function
+    await checkAuth()
+    // console.log('Auth check passed')
+    
+    const supabase = await createClient()
+    const { data: tasks, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .order('create_at', { ascending: false })
+
+    // console.log('Fetched tasks:', tasks)
+    // console.log('Error if any:', error)
+
+    if (error) {
+      console.error('Error fetching tasks:', error)
+      return []
+    }
+
+    return tasks || []
+  } catch (e) {
+    console.error('getData error:', e)
+    return []
+  }
 }
 
 export default async function DemoPage() {

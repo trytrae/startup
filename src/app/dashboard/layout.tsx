@@ -8,6 +8,7 @@ import {
   ChartBarIcon,
   UserCircleIcon,
   DocumentTextIcon,
+  CubeIcon,
 } from '@heroicons/react/24/outline'
 import Header from '@/components/dashboard/Header'
 import { checkAuth } from './actions'
@@ -21,9 +22,9 @@ interface NavItem {
 const navigation: NavItem[] = [
   { name: 'Overview', href: '/dashboard', icon: HomeIcon },
   { name: 'Analytics', href: '/dashboard/analytics', icon: ChartBarIcon },
-  { name: 'Tasks', href: '/dashboard/tasks', icon: DocumentTextIcon },
   { name: 'User Portraits', href: '/dashboard/users', icon: UserCircleIcon },
-  { name: 'Product Portraits', href: '/dashboard/products', icon: DocumentTextIcon },
+  { name: 'Product Portraits', href: '/dashboard/products', icon: CubeIcon },
+  { name: 'Tasks', href: '/dashboard/tasks', icon: DocumentTextIcon },
 ]
 
 export default function DashboardLayout({

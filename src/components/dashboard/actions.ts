@@ -13,16 +13,18 @@ export async function signOut() {
 
 export async function getCurrentUser() {
   const supabase = await createClient()
-  const { data: { session } } = await supabase.auth.getSession()
+  const { data: { user }, error } = await supabase.auth.getUser()
   
-  if (!session) {
+  if (!user || error) {
     return null
   }
+  
+ 
 
   const { data: userData } = await supabase
     .from('users')
     .select('id, email, credits')
-    .eq('id', session.user.id)
+    .eq('id', user.id)
     .single()
 
   return userData

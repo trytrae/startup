@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { login, signup } from './actions'
@@ -10,11 +10,16 @@ interface AuthFormProps {
 }
 
 export default function AuthForm({ view: initialView }: AuthFormProps) {
-  const [isSignUp, setIsSignUp] = useState(initialView === 'sign-up')
+  const searchParams = useSearchParams()
+  const view = searchParams?.get('view')
+  const [isSignUp, setIsSignUp] = useState(false)
   const [error, setError] = useState<string | null>(null)
   
-  const searchParams = useSearchParams()
   const returnUrl = searchParams?.get('returnUrl') || '/'
+
+  useEffect(() => {
+    setIsSignUp(view === 'sign-up' || initialView === 'sign-up')
+  }, [view, initialView])
 
   return (
     <div className="flex flex-col items-center justify-center flex-1 w-full px-4">

@@ -13,14 +13,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
- 
+import { createClient } from "@/utils/supabase/client"
+import { useRouter } from "next/navigation"
 
- 
- 
 export type Task = {
     id: string
     name: string
-    type: "User demand research" | "Product proof-of-concept research"
+    type: "User demand research" | "Product proof-of-concept research" 
     user_portraits: string
     product_portraits: string
     status: "pending" | "processing" | "success" | "failed"
@@ -81,12 +80,30 @@ export const columns: ColumnDef<Task>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const payment = row.original
- 
+      const task = row.original
+      const router = useRouter()
+      
+      const handleDelete = async () => {
+        try {
+          const supabase = createClient()
+          const { error } = await supabase
+            .from('tasks')
+            .delete()
+            .eq('id', task.id)
+
+          if (error) throw error
+          
+          // 刷新页面以更新数据
+          router.refresh()
+        } catch (error) {
+          console.error('Error deleting task:', error)
+        }
+      }
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Label  className="h-8 w-8 p-0">
+            <Label className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Label>
@@ -94,13 +111,18 @@ export const columns: ColumnDef<Task>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(task.id)}
             >
               Task Report
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={handleDelete}
+              className="text-red-600 focus:text-red-600"
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
