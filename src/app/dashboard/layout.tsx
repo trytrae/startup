@@ -1,17 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import {
   HomeIcon,
   ChartBarIcon,
   UserCircleIcon,
   DocumentTextIcon,
-  Cog6ToothIcon,
 } from '@heroicons/react/24/outline'
 import Header from '@/components/dashboard/Header'
+import { checkAuth } from './actions'
 
 interface NavItem {
   name: string
@@ -25,7 +24,6 @@ const navigation: NavItem[] = [
   { name: 'Tasks', href: '/dashboard/tasks', icon: DocumentTextIcon },
   { name: 'User Portraits', href: '/dashboard/users', icon: UserCircleIcon },
   { name: 'Product Portraits', href: '/dashboard/products', icon: DocumentTextIcon },
-
 ]
 
 export default function DashboardLayout({
@@ -34,44 +32,19 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const [isLoading, setIsLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const router = useRouter()
   const pathname = usePathname()
-  const supabase = createClientComponentClient()
 
   useEffect(() => {
-    const checkSession = async () => {
+    const init = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        if (!session) {
-          router.replace('/auth')
-          return
-        }
-        setIsAuthenticated(true)
-      } catch (error) {
-        console.error('Error checking session:', error)
-        router.replace('/auth')
+        await checkAuth()
       } finally {
         setIsLoading(false)
       }
     }
 
-    checkSession()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        router.replace('/auth')
-        setIsAuthenticated(false)
-      } else {
-        setIsAuthenticated(true)
-      }
-      setIsLoading(false)
-    })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [router, supabase.auth])
+    init()
+  }, [])
 
   if (isLoading) {
     return (
@@ -81,16 +54,12 @@ export default function DashboardLayout({
     )
   }
 
-  if (!isAuthenticated) {
-    return null
-  }
-
   return (
     <div className="min-h-screen bg-black">
       <Header />
       
       <div className="flex h-[calc(100vh-4rem)] pt-16">
-        {/* Sidebar */}
+        {/* Sidebar 部分保持不变 */}
         <div className="fixed left-0 w-64 h-[calc(100vh-4rem)] bg-[#111111] border-r border-white/5 overflow-y-auto">
           <nav className="p-4 space-y-1">
             {navigation.map((item) => {
@@ -115,11 +84,10 @@ export default function DashboardLayout({
           </nav>
         </div>
 
-        {/* Main Content */}
         <div className="ml-64 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {children}
         </div>
       </div>
     </div>
   )
-} 
+}

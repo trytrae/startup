@@ -1,11 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Database } from '@/types/supabase'
-import { ModeToggle } from './Mode'
+import { signOut, getCurrentUser } from './actions'
 
 interface User {
   id: string
@@ -19,32 +16,12 @@ export default function Header() {
   const [error, setError] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const supabase = createClientComponentClient<Database>()
-  const router = useRouter()
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        
-        if (!session) {
-          setUser(null)
-          setIsLoading(false)
-          return
-        }
-
-        const { data: userData } = await supabase
-          .from('users')
-          .select('id, email, credits')
-          .eq('id', session.user.id)
-          .single()
-
+        const userData = await getCurrentUser()
         if (userData) {
-          setUser({
-            id: userData.id,
-            email: session.user.email || userData.email,
-            credits: userData.credits
-          })
+          setUser(userData)
         }
       } catch (error) {
         console.error('Error:', error)
@@ -55,43 +32,9 @@ export default function Header() {
     }
 
     fetchUser()
+  }, [])
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session) {
-        const { data: userData } = await supabase
-          .from('users')
-          .select('id, email, credits')
-          .eq('id', session.user.id)
-          .single()
-
-        if (userData) {
-          setUser({
-            id: userData.id,
-            email: session.user.email || userData.email,
-            credits: userData.credits
-          })
-        }
-      } else {
-        setUser(null)
-        router.replace('/auth')
-      }
-    })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [supabase, router])
-
-  const handleSignOut = async () => {
-    try {
-      await supabase.auth.signOut()
-      router.replace('/auth')
-    } catch (error) {
-      console.error('Error signing out:', error)
-      setError('Error signing out')
-    }
-  }
-
+  // Loading state 保持不变
   if (isLoading) {
     return (
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A] border-b border-white/10">
@@ -168,7 +111,7 @@ export default function Header() {
                       <button
                         onClick={() => {
                           setIsMenuOpen(false)
-                          handleSignOut()
+                          signOut()
                         }}
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
@@ -184,4 +127,4 @@ export default function Header() {
       </div>
     </header>
   )
-} 
+}

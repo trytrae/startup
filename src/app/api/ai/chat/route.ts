@@ -1,5 +1,4 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
@@ -9,7 +8,7 @@ const openai = new OpenAI({
 
 export async function POST(req: Request) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = await createClient()
     const { messages } = await req.json()
 
     // Check authentication
@@ -73,4 +72,4 @@ export async function POST(req: Request) {
       { status: 500 }
     )
   }
-} 
+}
