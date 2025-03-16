@@ -22,9 +22,10 @@ interface NavItem {
 const navigation: NavItem[] = [
   { name: 'Overview', href: '/dashboard', icon: HomeIcon },
   { name: 'Analytics', href: '/dashboard/analytics', icon: ChartBarIcon },
-  { name: 'Profile', href: '/dashboard/profile', icon: UserCircleIcon },
-  { name: 'Documents', href: '/dashboard/documents', icon: DocumentTextIcon },
-  { name: 'Settings', href: '/dashboard/settings', icon: Cog6ToothIcon },
+  { name: 'Tasks', href: '/dashboard/tasks', icon: DocumentTextIcon },
+  { name: 'User Portraits', href: '/dashboard/users', icon: UserCircleIcon },
+  { name: 'Product Portraits', href: '/dashboard/products', icon: DocumentTextIcon },
+
 ]
 
 export default function DashboardLayout({
