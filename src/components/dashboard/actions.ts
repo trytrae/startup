@@ -29,3 +29,16 @@ export async function getCurrentUser() {
 
   return userData
 }
+
+
+export async function fetchHealthCheck() {
+  try {
+    const response = await fetch('http://localhost:5000/api/health', {
+      cache: 'no-store'
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching health check:', error);
+    throw error;
+  }
+}
