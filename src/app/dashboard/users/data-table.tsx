@@ -57,14 +57,22 @@ export function DataTable<TData, TValue>({
         <div>
             <div className="flex items-center justify-between py-4">
                 <Input
-                    placeholder="Filter user name..."
-                    value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                    placeholder="Filter user id..."
+                    value={(table.getColumn("id")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
-                        table.getColumn("name")?.setFilterValue(event.target.value)
+                        table.getColumn("id")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
                 />
-                <DialogNewUser />
+                <div className="flex gap-2">
+                    <DialogNewUser />
+                    <Button  onClick={() => {
+                        // TODO: 实现Excel导入功能
+                        console.log('Import Excel clicked')
+                    }}>
+                        Import Excel
+                    </Button>
+                </div>
             </div>
             <div className="rounded-md border">
                 <Table>

@@ -1,59 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useChat } from '@ai-sdk/react'
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline'
-
-interface Message {
-  role: 'user' | 'assistant'
-  content: string
-}
-
+//https://sdk.vercel.ai/cookbook/next/stream-text
 export default function Chat() {
-  const [messages, setMessages] = useState<Message[]>([])
-  const [input, setInput] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!input.trim() || isLoading) return
-
-    setIsLoading(true)
-    setError(null)
-
-    const newMessages = [
-      ...messages,
-      { role: 'user', content: input.trim() } as Message
-    ]
-
-    setMessages(newMessages)
-    setInput('')
-
-    try {
-      const response = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: newMessages,
-        }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Error processing request')
-      }
-
-      setMessages([...newMessages, data])
-    } catch (err) {
-      console.error('Error:', err)
-      setError(err instanceof Error ? err.message : 'Error sending message')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat()
 
   return (
     <div className="bg-[#111111] border border-white/5 rounded-xl h-[600px] flex flex-col">
@@ -72,9 +23,9 @@ export default function Chat() {
             Start a conversation with AI
           </div>
         ) : (
-          messages.map((message, index) => (
+          messages.map((message) => (
             <div
-              key={index}
+              key={message.id}
               className={`flex ${
                 message.role === 'user' ? 'justify-end' : 'justify-start'
               }`}
@@ -86,7 +37,13 @@ export default function Chat() {
                     : 'bg-white/5 text-white'
                 }`}
               >
-                <p className="whitespace-pre-wrap">{message.content}</p>
+                {message.parts.map((part, i) => (
+                  part.type === 'text' && (
+                    <p key={`${message.id}-${i}`} className="whitespace-pre-wrap">
+                      {part.text}
+                    </p>
+                  )
+                ))}
               </div>
             </div>
           ))
@@ -104,20 +61,13 @@ export default function Chat() {
         )}
       </div>
 
-      {/* Error Message */}
-      {error && (
-        <div className="px-4 py-2 bg-red-500/10 text-red-500 text-sm">
-          {error}
-        </div>
-      )}
-
       {/* Input Form */}
       <form onSubmit={handleSubmit} className="p-4 border-t border-white/5">
         <div className="flex space-x-4">
           <input
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={handleInputChange}
             placeholder="Type your message..."
             className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#FFBE1A] focus:border-transparent"
             disabled={isLoading}
@@ -133,4 +83,4 @@ export default function Chat() {
       </form>
     </div>
   )
-} 
+}
