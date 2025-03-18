@@ -23,35 +23,92 @@ import { useRouter } from "next/navigation"
  
  
 export type User = {
-    id: string
-    name: string
-    amount: number
-    create_at: string
-  }
+  id: string
+  city: string
+  occupation: string
+  childAge: number
+  lifestyle: string
+  annualClothingSpend: number
+  purchaseHistory1: string
+  purchaseHistory2: string
+  purchaseHistory3: string
+}
 
 export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "id",
-    header: "User Id",
+    header: "User ID",
     cell: ({ row }) => {
       const value = row.getValue("id") as string
       return <div className="min-w-[100px] w-full truncate">{value}</div>
     }
   },
   {
-    accessorKey: "name",
-    header: "User Name",
+    accessorKey: "city",
+    header: "City",
     cell: ({ row }) => {
-      const value = row.getValue("name") as string
+      const value = row.getValue("city") as string
       return <div className="min-w-[100px] w-full truncate">{value}</div>
     }
   },
   {
-    accessorKey: "amount",
-    header: "User Amount",
+    accessorKey: "occupation",
+    header: "Occupation",
     cell: ({ row }) => {
-      const value = row.getValue("amount") as string
+      const value = row.getValue("occupation") as string
       return <div className="min-w-[100px] w-full truncate">{value}</div>
+    }
+  },
+  {
+    accessorKey: "childAge",
+    header: "Child Age",
+    cell: ({ row }) => {
+      const value = row.getValue("childAge") as number
+      return <div className="min-w-[80px] w-full truncate">{value}</div>
+    }
+  },
+  {
+    accessorKey: "lifestyle",
+    header: "Lifestyle",
+    cell: ({ row }) => {
+      const value = row.getValue("lifestyle") as string
+      return <div className="min-w-[120px] w-full truncate">{value}</div>
+    }
+  },
+  {
+    accessorKey: "annualClothingSpend",
+    header: "Annual Clothing Spend (¥)",
+    cell: ({ row }) => {
+      const value = row.getValue("annualClothingSpend") as number
+      return (
+        <div className="min-w-[120px] w-full truncate text-right">
+          {value ? `¥${value.toLocaleString()}` : '-'}
+        </div>
+      )
+    }
+  },
+  {
+    accessorKey: "purchaseHistory1",
+    header: "Purchase History 1",
+    cell: ({ row }) => {
+      const value = row.getValue("purchaseHistory1") as string
+      return <div className="min-w-[200px] w-full truncate">{value}</div>
+    }
+  },
+  {
+    accessorKey: "purchaseHistory2",
+    header: "Purchase History 2",
+    cell: ({ row }) => {
+      const value = row.getValue("purchaseHistory2") as string
+      return <div className="min-w-[200px] w-full truncate">{value}</div>
+    }
+  },
+  {
+    accessorKey: "purchaseHistory3",
+    header: "Purchase History 3",
+    cell: ({ row }) => {
+      const value = row.getValue("purchaseHistory3") as string
+      return <div className="min-w-[200px] w-full truncate">{value}</div>
     }
   },
    
@@ -89,7 +146,7 @@ export const columns: ColumnDef<User>[] = [
       
       const handleDelete = async () => {
         try {
-          const supabase = createClient()
+          const supabase = createClient() 
           const { error } = await supabase
             .from('users')
             .delete()
