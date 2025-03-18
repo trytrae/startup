@@ -12,7 +12,7 @@ async function getData(): Promise<User[]> {
     const { data: users, error } = await supabase
       .from('users')
       .select('*')
-      .order('create_at', { ascending: false })
+      .order('created_at', { ascending: false })  // Fix: change 'create_at' to 'created_at'
 
     if (error) {
       console.error('Error fetching users:', error)

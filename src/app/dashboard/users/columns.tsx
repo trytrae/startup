@@ -26,12 +26,13 @@ export type User = {
   id: string
   city: string
   occupation: string
-  childAge: number
+  child_age: number
   lifestyle: string
-  annualClothingSpend: number
-  purchaseHistory1: string
-  purchaseHistory2: string
-  purchaseHistory3: string
+  annual_clothing_spend: number  // Changed from annualClothingSpend to match DB schema
+  purchase_history1: string
+  purchase_history2: string
+  purchase_history3: string
+  created_at: string
 }
 
 export const columns: ColumnDef<User>[] = [
@@ -60,10 +61,10 @@ export const columns: ColumnDef<User>[] = [
     }
   },
   {
-    accessorKey: "childAge",
+    accessorKey: "child_age",
     header: "Child Age",
     cell: ({ row }) => {
-      const value = row.getValue("childAge") as number
+      const value = row.getValue("child_age") as number
       return <div className="min-w-[80px] w-full truncate">{value}</div>
     }
   },
@@ -76,10 +77,10 @@ export const columns: ColumnDef<User>[] = [
     }
   },
   {
-    accessorKey: "annualClothingSpend",
+    accessorKey: "annual_clothing_spend",  // Changed to match the new name
     header: "Annual Clothing Spend (¥)",
     cell: ({ row }) => {
-      const value = row.getValue("annualClothingSpend") as number
+      const value = row.getValue("annual_clothing_spend") as number  // Changed here too
       return (
         <div className="min-w-[120px] w-full truncate text-right">
           {value ? `¥${value.toLocaleString()}` : '-'}
@@ -88,32 +89,32 @@ export const columns: ColumnDef<User>[] = [
     }
   },
   {
-    accessorKey: "purchaseHistory1",
+    accessorKey: "purchase_history1",
     header: "Purchase History 1",
     cell: ({ row }) => {
-      const value = row.getValue("purchaseHistory1") as string
+      const value = row.getValue("purchase_history1") as string
       return <div className="min-w-[200px] w-full truncate">{value}</div>
     }
   },
   {
-    accessorKey: "purchaseHistory2",
+    accessorKey: "purchase_history2",
     header: "Purchase History 2",
     cell: ({ row }) => {
-      const value = row.getValue("purchaseHistory2") as string
+      const value = row.getValue("purchase_history2") as string
       return <div className="min-w-[200px] w-full truncate">{value}</div>
     }
   },
   {
-    accessorKey: "purchaseHistory3",
+    accessorKey: "purchase_history3",
     header: "Purchase History 3",
     cell: ({ row }) => {
-      const value = row.getValue("purchaseHistory3") as string
+      const value = row.getValue("purchase_history3") as string
       return <div className="min-w-[200px] w-full truncate">{value}</div>
     }
   },
    
   {
-    accessorKey: "create_at", 
+    accessorKey: "created_at", 
     header: ({ column }) => {
         return (
           <Label 

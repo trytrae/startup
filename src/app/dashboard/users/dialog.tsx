@@ -26,12 +26,12 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
         id: user?.id || uuidv4(),
         city: user?.city || '',
         occupation: user?.occupation || '',
-        childAge: user?.childAge || 0,
+        child_age: user?.child_age || 0,
         lifestyle: user?.lifestyle || '',
-        annualClothingSpend: user?.annualClothingSpend || 0,
-        purchaseHistory1: user?.purchaseHistory1 || '',
-        purchaseHistory2: user?.purchaseHistory2 || '',
-        purchaseHistory3: user?.purchaseHistory3 || ''
+        annual_clothing_spend: user?.annual_clothing_spend || 0,
+        purchase_history1: user?.purchase_history1 || '',
+        purchase_history2: user?.purchase_history2 || '',
+        purchase_history3: user?.purchase_history3 || ''
     })
     
     const handleSubmit = async () => {
@@ -56,12 +56,12 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
                 id: user?.id || uuidv4(),
                 city: '',
                 occupation: '',
-                childAge: 0,
+                child_age: 0,
                 lifestyle: '',
-                annualClothingSpend: 0,
-                purchaseHistory1: '',
-                purchaseHistory2: '',
-                purchaseHistory3: ''
+                annual_clothing_spend: 0,
+                purchase_history1: '',
+                purchase_history2: '',
+                purchase_history3: ''
             })  
             setOpen(false)
             router.refresh()
@@ -119,8 +119,8 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
                         <Input 
                             id="childAge" 
                             type="number"
-                            value={formData.childAge}
-                            onChange={(e) => handleInputChange('childAge', Number(e.target.value))}
+                            value={formData.child_age}
+                            onChange={(e) => handleInputChange('child_age', Number(e.target.value))}
                         />
                     </div>
 
@@ -138,8 +138,8 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
                         <Input 
                             id="annualClothingSpend" 
                             type="number"
-                            value={formData.annualClothingSpend}
-                            onChange={(e) => handleInputChange('annualClothingSpend', Number(e.target.value))}
+                            value={formData.annual_clothing_spend}
+                            onChange={(e) => handleInputChange('annual_clothing_spend', Number(e.target.value))}
                         />
                     </div>
 
@@ -147,8 +147,8 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
                         <Label htmlFor="purchaseHistory1">Purchase History 1</Label>
                         <Input 
                             id="purchaseHistory1" 
-                            value={formData.purchaseHistory1}
-                            onChange={(e) => handleInputChange('purchaseHistory1', e.target.value)}
+                            value={formData.purchase_history1}
+                            onChange={(e) => handleInputChange('purchase_history1', e.target.value)}
                         />
                     </div>
 
@@ -156,8 +156,8 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
                         <Label htmlFor="purchaseHistory2">Purchase History 2</Label>
                         <Input 
                             id="purchaseHistory2" 
-                            value={formData.purchaseHistory2}
-                            onChange={(e) => handleInputChange('purchaseHistory2', e.target.value)}
+                            value={formData.purchase_history2}
+                            onChange={(e) => handleInputChange('purchase_history2', e.target.value)}
                         />
                     </div>
 
@@ -165,8 +165,8 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
                         <Label htmlFor="purchaseHistory3">Purchase History 3</Label>
                         <Input 
                             id="purchaseHistory3" 
-                            value={formData.purchaseHistory3}
-                            onChange={(e) => handleInputChange('purchaseHistory3', e.target.value)}
+                            value={formData.purchase_history3}
+                            onChange={(e) => handleInputChange('purchase_history3', e.target.value)}
                         />
                     </div>
                 </div>
