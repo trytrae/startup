@@ -1,5 +1,8 @@
 "use client"
 
+import { useState, useEffect } from "react"
+import { createClient } from '@/utils/supabase/client'
+
 import {
     ColumnDef,
     flexRender,
@@ -28,14 +31,15 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
 }
 
+ 
+
 export function DataTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)  // Add this line
 
     const table = useReactTable({
         data,
@@ -66,12 +70,7 @@ export function DataTable<TData, TValue>({
                 />
                 <div className="flex gap-2">
                     <DialogNewUser />
-                    <Button  onClick={() => {
-                        // TODO: 实现Excel导入功能
-                        console.log('Import Excel clicked')
-                    }}>
-                        Import Excel
-                    </Button>
+
                 </div>
             </div>
             <div className="rounded-md border">
@@ -134,6 +133,7 @@ export function DataTable<TData, TValue>({
                     Next
                 </Button>
             </div>
+ 
         </div>
     )
 }
