@@ -132,7 +132,9 @@ export const columns: ColumnDef<Task>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(task.id)}
+              onClick={() => {
+                router.push(`/dashboard/tasks/${task.id}`)
+              }}
             >
               Task Report
             </DropdownMenuItem>
