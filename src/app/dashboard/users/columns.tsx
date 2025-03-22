@@ -13,9 +13,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Label } from "@/components/ui/label"
-import { DialogNewUser } from "./dialog"  // 在users的相关文件中
+import { DialogNewUser, DialogNewUserGroup } from "./dialog"  // 在users的相关文件中
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from "next/navigation"
+import { useState } from 'react'
 
 
 // This type is used to define the shape of our data.
@@ -24,6 +25,7 @@ import { useRouter } from "next/navigation"
  
 export type User = {
   id: string
+  group_id: string  // 添加这个字段
   city: string
   occupation: string
   child_age: number
@@ -35,7 +37,7 @@ export type User = {
   created_at: string
 }
 
-export const columns: ColumnDef<User>[] = [
+export const userColumns: ColumnDef<User>[] = [
   {
     accessorKey: "id",
     header: "User ID",
@@ -161,6 +163,8 @@ export const columns: ColumnDef<User>[] = [
         }
       }
 
+      const [showUsers, setShowUsers] = useState(false)
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -172,7 +176,9 @@ export const columns: ColumnDef<User>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(user.id)}
+              onClick={() => {
+                setShowUsers(!showUsers)
+              }}
             >
               Check Details
             </DropdownMenuItem>
@@ -189,4 +195,104 @@ export const columns: ColumnDef<User>[] = [
       )
     },
   },
+]
+
+
+export type UserGroup = {
+  group_id: string
+  group_name: string
+  user_amount: number
+  created_at: string
+}
+
+export const groupColumns: ColumnDef<UserGroup>[] = [
+  {
+    accessorKey: "group_id",
+    header: "Group ID",
+    cell: ({ row }) => {
+      const value = row.getValue("group_id") as string
+      return <div className="min-w-[100px] w-full truncate">{value}</div>
+    }
+  },
+  {
+    accessorKey: "group_name",
+    header: "Group Name",
+    cell: ({ row }) => {
+      const value = row.getValue("group_name") as string
+      return <div className="min-w-[150px] w-full truncate">{value}</div>
+    }
+  },
+  {
+    accessorKey: "user_amount",
+    header: "User Amount",
+    cell: ({ row }) => {
+      const value = row.getValue("user_amount") as number
+      return <div className="min-w-[100px] w-full truncate text-right">{value}</div>
+    }
+  },
+  {
+    accessorKey: "created_at",
+    header: ({ column }) => {
+      return (
+        <Label 
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Created At
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Label>
+      )
+    }
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const group = row.original
+      const router = useRouter()
+      const [showUsers, setShowUsers] = useState(false)
+      
+      const handleDelete = async () => {
+        try {
+          const supabase = createClient()
+          const { error } = await supabase
+            .from('usergroup')
+            .delete()
+            .eq('group_id', group.group_id)
+
+          if (error) throw error
+          router.refresh()
+        } catch (error) {
+          console.error('Error deleting group:', error)
+        }
+      }
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Label className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Label>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => {
+                setShowUsers(!showUsers)
+              }}
+            >
+              Check Details
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DialogNewUserGroup group={group} mode="edit" />
+            <DropdownMenuItem 
+              onClick={handleDelete}
+              className="text-red-600 focus:text-red-600"
+            >
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    }
+  }
 ]

@@ -1,5 +1,8 @@
 "use client"
 
+import { useState, useEffect } from "react"
+import { createClient } from '@/utils/supabase/client'
+
 import {
     ColumnDef,
     flexRender,
@@ -28,14 +31,66 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
 }
 
+interface GroupUser {
+  id: string
+  name: string
+  email: string
+  group_id: string
+}
+
+const UserTable = ({ groupId }: { groupId: string }) => {
+  const [users, setUsers] = useState<GroupUser[]>([])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const supabase = createClient()
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('group_id', groupId)
+
+      if (data) setUsers(data)
+    }
+
+    fetchUsers()
+  }, [groupId])
+
+  return (
+    <div className="mt-4">
+      <h3 className="text-lg font-medium mb-2">Group Users</h3>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              {/* Add other user fields as needed */}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell>{user.id}</TableCell>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                {/* Add other user fields as needed */}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  )
+}
+
 export function DataTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-        []
-    )
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)  // Add this line
 
     const table = useReactTable({
         data,
@@ -134,6 +189,10 @@ export function DataTable<TData, TValue>({
                     Next
                 </Button>
             </div>
+            {/* Add User Table */}
+            {selectedGroupId && (
+                <UserTable groupId={selectedGroupId} />
+            )}
         </div>
     )
 }
