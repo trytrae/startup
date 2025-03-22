@@ -31,58 +31,7 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
 }
 
-interface GroupUser {
-  id: string
-  name: string
-  email: string
-  group_id: string
-}
-
-const UserTable = ({ groupId }: { groupId: string }) => {
-  const [users, setUsers] = useState<GroupUser[]>([])
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const supabase = createClient()
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('group_id', groupId)
-
-      if (data) setUsers(data)
-    }
-
-    fetchUsers()
-  }, [groupId])
-
-  return (
-    <div className="mt-4">
-      <h3 className="text-lg font-medium mb-2">Group Users</h3>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              {/* Add other user fields as needed */}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                {/* Add other user fields as needed */}
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </div>
-  )
-}
+ 
 
 export function DataTable<TData, TValue>({
     columns,
@@ -121,12 +70,7 @@ export function DataTable<TData, TValue>({
                 />
                 <div className="flex gap-2">
                     <DialogNewUser />
-                    <Button  onClick={() => {
-                        // TODO: 实现Excel导入功能
-                        console.log('Import Excel clicked')
-                    }}>
-                        Import Excel
-                    </Button>
+
                 </div>
             </div>
             <div className="rounded-md border">
@@ -189,10 +133,7 @@ export function DataTable<TData, TValue>({
                     Next
                 </Button>
             </div>
-            {/* Add User Table */}
-            {selectedGroupId && (
-                <UserTable groupId={selectedGroupId} />
-            )}
+ 
         </div>
     )
 }

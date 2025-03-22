@@ -205,7 +205,7 @@ export type UserGroup = {
   created_at: string
 }
 
-export const groupColumns: ColumnDef<UserGroup>[] = [
+export const groupColumns = (onShowUsers: (groupId: string) => void): ColumnDef<UserGroup>[] => [
   {
     accessorKey: "group_id",
     header: "Group ID",
@@ -248,7 +248,6 @@ export const groupColumns: ColumnDef<UserGroup>[] = [
     cell: ({ row }) => {
       const group = row.original
       const router = useRouter()
-      const [showUsers, setShowUsers] = useState(false)
       
       const handleDelete = async () => {
         try {
@@ -276,9 +275,7 @@ export const groupColumns: ColumnDef<UserGroup>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => {
-                setShowUsers(!showUsers)
-              }}
+              onClick={() => onShowUsers(group.group_id)}
             >
               Check Details
             </DropdownMenuItem>
