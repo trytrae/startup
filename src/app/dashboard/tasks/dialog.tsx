@@ -72,6 +72,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     
     const handleSubmit = async () => {
         try {
+            // 首先保存到 Supabase
             if (mode === 'edit' && task) {
                 const { error } = await supabase
                     .from('tasks')
@@ -86,7 +87,24 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
 
                 if (error) throw error
             }
-            
+
+            // 发送数据到 Flask 后端
+            const response = await fetch('http://localhost:5000/api/jeans-feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: formData.id,
+                    user_portraits: formData.user_portraits,
+                    product_portraits: formData.product_portraits,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send data to backend');
+            }
+
             // 清空表单并刷新页面
             setFormData({
                 id: task?.id || uuidv4(),
