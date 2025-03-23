@@ -99,14 +99,14 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                 },
                 body: JSON.stringify({
                     task_id: formData.task_id,
-                    user_portraits: formData.user_portraits,
-                    product_portraits: formData.product_portraits,
+                    group_id: formData.group_id,
+                    product_id: formData.product_id,
                 }),
             });
 
-            // if (!response.ok) {
-            //     throw new Error('Failed to send data to backend');
-            // }
+            if (!response.ok) {
+                throw new Error('Failed to send data to backend');
+            }
 
             // 清空表单并刷新页面
             setFormData({
