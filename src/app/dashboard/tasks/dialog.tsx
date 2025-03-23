@@ -26,6 +26,7 @@ import { Task } from "./columns"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
 import { v4 as uuidv4 } from 'uuid'
+import { group } from "console"
 
 
 
@@ -34,8 +35,8 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     const router = useRouter()
     const [open, setOpen] = useState(false)
     // 添加新的状态
-    const [users, setUsers] = useState<Array<{ id: string; name: string }>>([])
-    const [products, setProducts] = useState<Array<{ id: string; name: string }>>([])
+    const [users, setUsers] = useState<Array<{ group_id: string; group_name: string }>>([])
+    const [products, setProducts] = useState<Array<{ product_id: string; name: string }>>([])
     
     // 添加数据获取函数
     React.useEffect(() => {
@@ -43,15 +44,15 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
             try {
                 // 获取用户数据
                 const { data: userData, error: userError } = await supabase
-                    .from('users')
-                    .select('id, name')
+                    .from('usergroup')
+                    .select('group_id, group_name')
                 if (userError) throw userError
                 setUsers(userData || [])
 
                 // 获取产品数据
                 const { data: productData, error: productError } = await supabase
                     .from('products')
-                    .select('id, name')
+                    .select('product_id, name')
                 if (productError) throw productError
                 setProducts(productData || [])
             } catch (error) {
@@ -62,21 +63,24 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
         fetchData()
     }, [])
     const [formData, setFormData] = useState({
-        id: task?.id || uuidv4(),
+        task_id: task?.task_id || uuidv4(),  // 从 id 改为 task_id
         name: task?.name || '',
         type: task?.type || '' as Task['type'],
         user_portraits: task?.user_portraits || '',
         product_portraits: task?.product_portraits || '',
-        status: task?.status || 'pending' as Task['status']
+        status: task?.status || 'pending' as Task['status'],
+        group_id: task?.group_id || '',
+        product_id: task?.product_id || '',
     })
     
     const handleSubmit = async () => {
         try {
+            // 首先保存到 Supabase
             if (mode === 'edit' && task) {
                 const { error } = await supabase
                     .from('tasks')
                     .update(formData)
-                    .eq('id', task.id)
+                    .eq('task_id', task.task_id)  // 从 id 改为 task_id
 
                 if (error) throw error
             } else {
@@ -86,15 +90,34 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
 
                 if (error) throw error
             }
-            
+
+            // 发送数据到 Flask 后端
+            const response = await fetch('http://localhost:5000/api/jeans-feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    task_id: formData.task_id,
+                    group_id: formData.group_id,
+                    product_id: formData.product_id,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send data to backend');
+            }
+
             // 清空表单并刷新页面
             setFormData({
-                id: task?.id || uuidv4(),
+                task_id: task?.task_id || uuidv4(),  // 从 id 改为 task_id
                 name: '',
                 type: '' as Task['type'],
                 user_portraits: '',
                 product_portraits: '',
-                status: 'pending'
+                status: 'pending',
+                group_id: '',
+                product_id: '',
             })
             setOpen(false)  // 关闭对话框
             router.refresh()
@@ -159,15 +182,23 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                         <Label htmlFor="user_portraits">User Portraits</Label>
                         <Select 
                             value={formData.user_portraits}
-                            onValueChange={(value) => handleInputChange('user_portraits', value)}
+                            onValueChange={(value) => {
+                                // 找到对应的用户数据
+                                const selectedUser = users.find(user => user.group_name === value);
+                                if (selectedUser) {
+                                    // 同时更新 user_portraits 和 group_id
+                                    handleInputChange('user_portraits', value);
+                                    handleInputChange('group_id', selectedUser.group_id);
+                                }
+                            }}
                         >
                             <SelectTrigger id="user_portraits">
                                 <SelectValue placeholder="Select user" />
                             </SelectTrigger>
                             <SelectContent>
                                 {users.map(user => (
-                                    <SelectItem key={user.id} value={user.name}>
-                                        {user.name}
+                                    <SelectItem key={user.group_id} value={user.group_name}>
+                                        {user.group_name}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
@@ -178,14 +209,22 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                         <Label htmlFor="product_portraits">Product Portraits</Label>
                         <Select 
                             value={formData.product_portraits}
-                            onValueChange={(value) => handleInputChange('product_portraits', value)}
+                            onValueChange={(value) => {
+                                // 找到对应的产品数据
+                                const selectedProduct = products.find(product => product.name === value);
+                                if (selectedProduct) {
+                                    // 同时更新 product_portraits 和 product_id
+                                    handleInputChange('product_portraits', value);
+                                    handleInputChange('product_id', selectedProduct.product_id);
+                                }
+                            }}
                         >
                             <SelectTrigger id="product_portraits">
                                 <SelectValue placeholder="Select product" />
                             </SelectTrigger>
                             <SelectContent>
                                 {products.map(product => (
-                                    <SelectItem key={product.id} value={product.name}>
+                                    <SelectItem key={product.product_id} value={product.name}>
                                         {product.name}
                                     </SelectItem>
                                 ))}

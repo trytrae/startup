@@ -18,21 +18,23 @@ import { useRouter } from "next/navigation"
 import { DialogNewTask } from "./dialog"
 
 export type Task = {
-    id: string
+    task_id: string  // 从 id 改为 task_id
     name: string
     type: "User demand research" | "Product proof-of-concept research" 
     user_portraits: string
     product_portraits: string
     status: "pending" | "processing" | "success" | "failed"
     create_at: string
-  }
+    group_id: string
+    product_id: string
+}
 
 export const columns: ColumnDef<Task>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "task_id",  // 从 id 改为 task_id
     header: "Task Id",
     cell: ({ row }) => {
-      const value = row.getValue("id") as string
+      const value = row.getValue("task_id") as string  // 从 id 改为 task_id
       return <div className="min-w-[100px] w-full truncate">{value}</div>
     }
   },
@@ -110,11 +112,10 @@ export const columns: ColumnDef<Task>[] = [
           const { error } = await supabase
             .from('tasks')
             .delete()
-            .eq('id', task.id)
+            .eq('task_id', task.task_id)  // 从 id 改为 task_id
 
           if (error) throw error
           
-          // 刷新页面以更新数据
           router.refresh()
         } catch (error) {
           console.error('Error deleting task:', error)
@@ -133,7 +134,7 @@ export const columns: ColumnDef<Task>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
-                router.push(`/dashboard/tasks/${task.id}`)
+                router.push(`/dashboard/tasks/${task.task_id}`)
               }}
             >
               Task Report
