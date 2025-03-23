@@ -26,6 +26,7 @@ import { Task } from "./columns"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
 import { v4 as uuidv4 } from 'uuid'
+import { group } from "console"
 
 
 
@@ -67,7 +68,9 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
         type: task?.type || '' as Task['type'],
         user_portraits: task?.user_portraits || '',
         product_portraits: task?.product_portraits || '',
-        status: task?.status || 'pending' as Task['status']
+        status: task?.status || 'pending' as Task['status'],
+        group_id: task?.group_id || '',
+        product_id: task?.product_id || '',
     })
     
     const handleSubmit = async () => {
@@ -101,9 +104,9 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error('Failed to send data to backend');
-            }
+            // if (!response.ok) {
+            //     throw new Error('Failed to send data to backend');
+            // }
 
             // 清空表单并刷新页面
             setFormData({
@@ -112,7 +115,9 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                 type: '' as Task['type'],
                 user_portraits: '',
                 product_portraits: '',
-                status: 'pending'
+                status: 'pending',
+                group_id: '',
+                product_id: '',
             })
             setOpen(false)  // 关闭对话框
             router.refresh()
@@ -177,7 +182,15 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                         <Label htmlFor="user_portraits">User Portraits</Label>
                         <Select 
                             value={formData.user_portraits}
-                            onValueChange={(value) => handleInputChange('user_portraits', value)}
+                            onValueChange={(value) => {
+                                // 找到对应的用户数据
+                                const selectedUser = users.find(user => user.group_name === value);
+                                if (selectedUser) {
+                                    // 同时更新 user_portraits 和 group_id
+                                    handleInputChange('user_portraits', value);
+                                    handleInputChange('group_id', selectedUser.group_id);
+                                }
+                            }}
                         >
                             <SelectTrigger id="user_portraits">
                                 <SelectValue placeholder="Select user" />
@@ -196,7 +209,15 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                         <Label htmlFor="product_portraits">Product Portraits</Label>
                         <Select 
                             value={formData.product_portraits}
-                            onValueChange={(value) => handleInputChange('product_portraits', value)}
+                            onValueChange={(value) => {
+                                // 找到对应的产品数据
+                                const selectedProduct = products.find(product => product.name === value);
+                                if (selectedProduct) {
+                                    // 同时更新 product_portraits 和 product_id
+                                    handleInputChange('product_portraits', value);
+                                    handleInputChange('product_id', selectedProduct.product_id);
+                                }
+                            }}
                         >
                             <SelectTrigger id="product_portraits">
                                 <SelectValue placeholder="Select product" />

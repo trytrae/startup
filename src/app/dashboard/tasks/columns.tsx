@@ -25,6 +25,8 @@ export type Task = {
     product_portraits: string
     status: "pending" | "processing" | "success" | "failed"
     create_at: string
+    group_id: string
+    product_id: string
 }
 
 export const columns: ColumnDef<Task>[] = [
