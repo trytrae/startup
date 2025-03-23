@@ -34,7 +34,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     const router = useRouter()
     const [open, setOpen] = useState(false)
     // 添加新的状态
-    const [users, setUsers] = useState<Array<{ id: string; name: string }>>([])
+    const [users, setUsers] = useState<Array<{ group_id: string; group_name: string }>>([])
     const [products, setProducts] = useState<Array<{ id: string; name: string }>>([])
     
     // 添加数据获取函数
@@ -43,8 +43,8 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
             try {
                 // 获取用户数据
                 const { data: userData, error: userError } = await supabase
-                    .from('users')
-                    .select('id, name')
+                    .from('usergroup')
+                    .select('group_id, group_name')
                 if (userError) throw userError
                 setUsers(userData || [])
 
@@ -166,8 +166,8 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                             </SelectTrigger>
                             <SelectContent>
                                 {users.map(user => (
-                                    <SelectItem key={user.id} value={user.name}>
-                                        {user.name}
+                                    <SelectItem key={user.group_id} value={user.group_name}>
+                                        {user.group_name}
                                     </SelectItem>
                                 ))}
                             </SelectContent>
