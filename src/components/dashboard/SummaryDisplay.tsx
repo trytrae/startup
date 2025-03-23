@@ -9,7 +9,13 @@ interface SummaryData {
   summary: Record<string, string[] | string>
 }
 
-export function SummaryDisplay({ taskId }: { taskId: string }) {
+export function SummaryDisplay({ 
+  taskId,
+  fallback = "暂无摘要数据"  // 添加 fallback 属性
+}: { 
+  taskId: string
+  fallback?: string 
+}) {
   const [loading, setLoading] = useState(true)
   const [summary, setSummary] = useState<SummaryData | null>(null)
 
@@ -40,7 +46,7 @@ export function SummaryDisplay({ taskId }: { taskId: string }) {
   }
 
   if (!summary) {
-    return <Textarea placeholder="无法加载摘要数据" disabled />
+    return <Textarea placeholder={fallback} disabled />
   }
 
   const summaryText = Object.entries(summary.summary)

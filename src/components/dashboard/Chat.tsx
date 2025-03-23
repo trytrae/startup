@@ -3,17 +3,25 @@
 import { useChat } from '@ai-sdk/react'
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline'
 //https://sdk.vercel.ai/cookbook/next/stream-text
-export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat()
-
+export default function Chat({ summary }: { summary?: string }) {
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    initialMessages: summary ? [
+      {
+        id: 'summary',
+        role: 'system',
+        content: `Context: ${summary}`,
+      }
+    ] : [],
+  })
+  
   return (
     <div className="bg-[#111111] border border-white/5 rounded-xl h-[600px] flex flex-col">
       {/* Chat Header */}
       <div className="p-4 border-b border-white/5">
         <h2 className="text-lg font-medium text-white">AI Chat</h2>
-        <p className="text-sm text-white/60">
+        {/* <p className="text-sm text-white/60">
           Each message costs 1 credit
-        </p>
+        </p> */}
       </div>
 
       {/* Messages */}
@@ -23,7 +31,7 @@ export default function Chat() {
             Start a conversation with AI
           </div>
         ) : (
-          messages.map((message) => (
+          messages.slice(1).map((message) => (
             <div
               key={message.id}
               className={`flex ${

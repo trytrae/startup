@@ -26,6 +26,25 @@ async function getTask(task_id: string): Promise<Task | null> {
   return data
 }
  
+
+interface SummaryData {
+  status: string
+  summary: Record<string, string[] | string>
+}
+
+async function getSummary(task_id: string): Promise<SummaryData | null> {
+  try {
+    const response = await fetch(`http://localhost:5000/api/summary?task_id=${task_id}`)
+    if (!response.ok) {
+      throw new Error('Failed to fetch summary')
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Error fetching summary:', error)
+    return null
+  }
+}
+
 export default async function TaskReport({
   params
 }: {
@@ -33,6 +52,7 @@ export default async function TaskReport({
 }) {
   const resolvedParams = await params
   const task = await getTask(resolvedParams.task_id)
+  const summary = await getSummary(resolvedParams.task_id)
 
   if (!task) {
     return <div>Task not found</div>
@@ -75,12 +95,14 @@ export default async function TaskReport({
                 <Label className="text-white/60">Conversation summary</Label>
                 <DownloadButton taskId={resolvedParams.task_id} />
               </div>
-              <SummaryDisplay taskId={resolvedParams.task_id} />
+              <SummaryDisplay 
+                taskId={resolvedParams.task_id} 
+                fallback={summary?.summary ? JSON.stringify(summary.summary) : "该任务暂无对话摘要"}
+              />
               <PieComponent />
-              {/* <词云图/> */}
             </div>
             <div className="bg-white/5 rounded-lg">
-              <Chat />
+              <Chat summary={summary?.summary ? JSON.stringify(summary.summary) : undefined} />
             </div>
           </div>
         </div>
