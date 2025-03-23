@@ -24,7 +24,7 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
     const router = useRouter()
     const [open, setOpen] = useState(false)
     const [formData, setFormData] = useState({
-        id: user?.id || uuidv4(),
+        user_id: user?.user_id || uuidv4(),
         city: user?.city || '',
         occupation: user?.occupation || '',
         child_age: user?.child_age || 0,
@@ -42,7 +42,7 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
                 const { error } = await supabase
                     .from('users')
                     .update(formData)
-                    .eq('id', user.id)
+                    .eq('user_id', user.user_id)
 
                 if (error) throw error
             } else {
@@ -54,7 +54,7 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
             }
             
             setFormData({
-                id: user?.id || uuidv4(),
+                user_id: user?.user_id || uuidv4(),
                 city: '',
                 occupation: '',
                 child_age: 0,

@@ -24,7 +24,7 @@ import { useState } from 'react'
  
  
 export type User = {
-  id: string
+  user_id: string
   group_id: string  // 添加这个字段
   city: string
   occupation: string
@@ -39,10 +39,10 @@ export type User = {
 
 export const userColumns: ColumnDef<User>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "user_id",
     header: "User ID",
     cell: ({ row }) => {
-      const value = row.getValue("id") as string
+      const value = row.getValue("user_id") as string
       return <div className="min-w-[100px] w-full truncate">{value}</div>
     }
   },
@@ -153,7 +153,7 @@ export const userColumns: ColumnDef<User>[] = [
           const { error } = await supabase
             .from('users')
             .delete()
-            .eq('id', user.id)
+            .eq('id', user.user_id)
 
           if (error) throw error
           

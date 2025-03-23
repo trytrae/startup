@@ -13,7 +13,7 @@ async function getTask(id: string): Promise<Task | null> {
   const { data, error } = await supabase
     .from('tasks')
     .select('*')
-    .eq('id', id)
+    .eq('task_id', id)  // Changed from 'id' to 'task_id'
     .single()
 
   if (error) {
@@ -27,10 +27,10 @@ async function getTask(id: string): Promise<Task | null> {
 export default async function TaskReport({ 
   params 
 }: { 
-  params: Promise<{ id: string }> 
+  params: Promise<{ task_id: string }> 
 }) {
   const resolvedParams = await params
-  const task = await getTask(resolvedParams.id)
+  const task = await getTask(resolvedParams.task_id)
 
   if (!task) {
     return <div>Task not found</div>

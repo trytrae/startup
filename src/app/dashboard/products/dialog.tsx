@@ -24,7 +24,7 @@ export function DialogNewProduct({ product, mode = 'create' }: { product?: Produ
     const router = useRouter()
     const [open, setOpen] = useState(false)
     const [formData, setFormData] = useState({
-        id: product?.id || uuidv4(),
+        product_id: product?.product_id || uuidv4(),  // 从 id 改为 product_id
         name: product?.name || '',
         image: product?.image || '',
         description: product?.description || ''
@@ -36,7 +36,7 @@ export function DialogNewProduct({ product, mode = 'create' }: { product?: Produ
                 const { error } = await supabase
                     .from('products')
                     .update(formData)
-                    .eq('id', product.id)
+                    .eq('product_id', product.product_id)  // 从 id 改为 product_id
 
                 if (error) throw error
             } else {
@@ -48,7 +48,7 @@ export function DialogNewProduct({ product, mode = 'create' }: { product?: Produ
             }
             
             setFormData({
-                id: product?.id || uuidv4(),
+                product_id: uuidv4(),  // 从 id 改为 product_id
                 name: '',
                 image: '',
                 description: ''

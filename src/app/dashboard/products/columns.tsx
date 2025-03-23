@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation"
 
  
 export type Product = {
-    id: string
+    product_id: string  // 从 id 改为 product_id
     name: string
     image: string
     description: string
@@ -29,10 +29,10 @@ export type Product = {
 
 export const columns: ColumnDef<Product>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "product_id",  // 从 id 改为 product_id
     header: "Product Id",
     cell: ({ row }) => {
-      const value = row.getValue("id") as string
+      const value = row.getValue("product_id") as string  // 从 id 改为 product_id
       return <div className="min-w-[100px] w-full truncate">{value}</div>
     }
   },
@@ -98,7 +98,7 @@ export const columns: ColumnDef<Product>[] = [
           const { error } = await supabase
             .from('products')
             .delete()
-            .eq('id', product.id)
+            .eq('product_id', product.product_id)  // 从 id 改为 product_id
 
           if (error) throw error
           
@@ -119,7 +119,7 @@ export const columns: ColumnDef<Product>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id)}
+              onClick={() => navigator.clipboard.writeText(product.product_id)}  // 从 id 改为 product_id
             >
               Check Details
             </DropdownMenuItem>

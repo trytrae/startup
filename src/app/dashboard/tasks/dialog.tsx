@@ -62,7 +62,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
         fetchData()
     }, [])
     const [formData, setFormData] = useState({
-        id: task?.id || uuidv4(),
+        task_id: task?.task_id || uuidv4(),  // 从 id 改为 task_id
         name: task?.name || '',
         type: task?.type || '' as Task['type'],
         user_portraits: task?.user_portraits || '',
@@ -77,7 +77,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                 const { error } = await supabase
                     .from('tasks')
                     .update(formData)
-                    .eq('id', task.id)
+                    .eq('task_id', task.task_id)  // 从 id 改为 task_id
 
                 if (error) throw error
             } else {
@@ -95,7 +95,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    id: formData.id,
+                    task_id: formData.task_id,
                     user_portraits: formData.user_portraits,
                     product_portraits: formData.product_portraits,
                 }),
@@ -107,7 +107,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
 
             // 清空表单并刷新页面
             setFormData({
-                id: task?.id || uuidv4(),
+                task_id: task?.task_id || uuidv4(),  // 从 id 改为 task_id
                 name: '',
                 type: '' as Task['type'],
                 user_portraits: '',
