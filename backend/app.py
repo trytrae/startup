@@ -144,6 +144,30 @@ def get_jeans_feedback():
                 task_prompt=TASK_PROMPT
             )
             print(feedback_results)
+            
+            try:
+                # 将结果保存到 conversations 表
+                conversation_data = {
+                    'status': feedback_results.get('status', 'fail'),
+                    'conversation': feedback_results.get('data', {}),
+                    'task_id': task_id
+                }
+                
+                # 插入数据到 conversations 表
+                conversation_result = supabase.table('conversations').insert(conversation_data).execute()
+                
+                # 如果 conversations 表写入成功，更新 tasks 表状态为 success
+                if conversation_result.data:
+                    supabase.table('tasks').update({'status': 'success'}).eq('task_id', task_id).execute()
+                else:
+                    # 如果写入失败，更新 tasks 表状态为 fail
+                    supabase.table('tasks').update({'status': 'fail'}).eq('task_id', task_id).execute()
+                
+            except Exception as e:
+                # 如果发生异常，更新 tasks 表状态为 fail
+                supabase.table('tasks').update({'status': 'fail'}).eq('task_id', task_id).execute()
+                print(f"Error saving conversation: {str(e)}")
+            
             return jsonify(feedback_results)
             
         except Exception as e:
@@ -175,6 +199,106 @@ def get_jeans_feedback():
             "message": str(e)
         }), 500
 
+
+@app.route('/api/conversation', methods=['GET'])
+def get_conversation():
+    try:
+        task_id = request.args.get('task_id')
+        if not task_id:
+            return jsonify({
+                "status": "error",
+                "message": "缺少 task_id 参数"
+            }), 400
+
+        # 获取任务信息和对话记录
+        task = supabase.table('tasks').select("name").eq('task_id', task_id).single().execute()
+        conversation = supabase.table('conversations') \
+            .select("*") \
+            .eq('task_id', task_id) \
+            .order('created_at', desc=True) \
+            .limit(1) \
+            .execute() 
+        if conversation.data:
+            return jsonify({
+                "status": "success",
+                "task_name": task.data.get('name', 'Untitled Task'),
+                "conversation": conversation.data[0]['conversation'],
+                "created_at": conversation.data[0]['created_at']
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": "未找到相关会话记录"
+            }), 404
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+@app.route('/api/summary', methods=['GET'])
+def get_summary():
+    try:
+        # 从请求参数中获取 task_id
+        task_id = request.args.get('task_id')
+        if not task_id:
+            return jsonify({
+                "status": "error",
+                "message": "缺少 task_id 参数"
+            }), 400
+
+        # 查询指定 task_id 的最新会话记录
+        response = supabase.table('conversations') \
+            .select("*") \
+            .eq('task_id', task_id) \
+            .order('created_at', desc=True) \
+            .limit(1) \
+            .execute()
+
+        # 检查是否有数据返回
+        if response.data and response.data[0].get('summary'):
+            return jsonify({
+                "status": "success",
+                "summary": response.data[0]['summary']
+            })
+        
+        # 如果没有数据或 summary 为空，返回 mock 数据
+        mock_summary = {
+            "关键反馈": [
+                "产品设计新颖，符合当下潮流",
+                "材质舒适，适合儿童日常活动",
+                "价格定位合理，性价比高"
+            ],
+            "改进建议": [
+                "可以增加更多颜色选择",
+                "建议增加防污处理",
+                "希望有更多尺码选择"
+            ],
+            "市场潜力": "根据用户反馈，产品市场接受度高，预计销售情况良好。建议重点关注产品质量控制和售后服务。"
+        }
+        
+        # 如果有会话记录，更新最新的记录
+        if response.data:
+            try:
+                # 更新最新会话记录的 summary 字段
+                supabase.table('conversations') \
+                    .update({'summary': mock_summary}) \
+                    .eq('conversation_id', response.data[0]['conversation_id']) \
+                    .execute()
+            except Exception as e:
+                print(f"Error updating summary: {str(e)}")
+        
+        return jsonify({
+            "status": "success",
+            "summary": mock_summary, 
+        })
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

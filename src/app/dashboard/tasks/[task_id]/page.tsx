@@ -6,14 +6,16 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import Chat from '@/components/dashboard/Chat'
 import { PieComponent } from '@/components/dashboard/chart-pie-label-custom'
+import { SummaryDisplay } from '@/components/dashboard/SummaryDisplay'
+import { DownloadButton } from '@/components/dashboard/DownloadButton'
 
 
-async function getTask(id: string): Promise<Task | null> {
+async function getTask(task_id: string): Promise<Task | null> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('tasks')
     .select('*')
-    .eq('task_id', id)  // Changed from 'id' to 'task_id'
+    .eq('task_id', task_id)  // Changed from 'id' to 'task_id'
     .single()
 
   if (error) {
@@ -23,11 +25,11 @@ async function getTask(id: string): Promise<Task | null> {
 
   return data
 }
-
-export default async function TaskReport({ 
-  params 
-}: { 
-  params: Promise<{ task_id: string }> 
+ 
+export default async function TaskReport({
+  params
+}: {
+  params: Promise<{ task_id: string }>
 }) {
   const resolvedParams = await params
   const task = await getTask(resolvedParams.task_id)
@@ -45,7 +47,7 @@ export default async function TaskReport({
         <span>/</span>
         <span>Task Report</span>
       </div>
-      
+
       <div>
         <h1 className="text-2xl font-bold text-white mb-4">Task Report</h1>
         {/* 这里添加任务报告的具体内容 */}
@@ -67,20 +69,20 @@ export default async function TaskReport({
           </div>
         </div>
         <div>
-        <div className="grid grid-cols-2 gap-8 mt-6">
-              <div className="bg-white/5 rounded-lg p-6">
-                <div className="flex justify-between items-center mb-2">
-                    <Label className="text-white/60">Conversation summary</Label>
-                    <Button>Download whole conversation</Button>
-                </div>
-                <Textarea placeholder="Type your message here." disabled />
-                <PieComponent/>
-                {/* <词云图/> */}
+          <div className="grid grid-cols-2 gap-8 mt-6">
+            <div className="bg-white/5 rounded-lg p-6">
+              <div className="flex justify-between items-center mb-2">
+                <Label className="text-white/60">Conversation summary</Label>
+                <DownloadButton taskId={resolvedParams.task_id} />
               </div>
-              <div className="bg-white/5 rounded-lg">
-                <Chat />
-              </div>
+              <SummaryDisplay taskId={resolvedParams.task_id} />
+              <PieComponent />
+              {/* <词云图/> */}
             </div>
+            <div className="bg-white/5 rounded-lg">
+              <Chat />
+            </div>
+          </div>
         </div>
 
       </div>
