@@ -35,7 +35,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     const [open, setOpen] = useState(false)
     // 添加新的状态
     const [users, setUsers] = useState<Array<{ group_id: string; group_name: string }>>([])
-    const [products, setProducts] = useState<Array<{ id: string; name: string }>>([])
+    const [products, setProducts] = useState<Array<{ product_id: string; name: string }>>([])
     
     // 添加数据获取函数
     React.useEffect(() => {
@@ -51,7 +51,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                 // 获取产品数据
                 const { data: productData, error: productError } = await supabase
                     .from('products')
-                    .select('id, name')
+                    .select('product_id, name')
                 if (productError) throw productError
                 setProducts(productData || [])
             } catch (error) {
@@ -203,7 +203,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                             </SelectTrigger>
                             <SelectContent>
                                 {products.map(product => (
-                                    <SelectItem key={product.id} value={product.name}>
+                                    <SelectItem key={product.product_id} value={product.name}>
                                         {product.name}
                                     </SelectItem>
                                 ))}

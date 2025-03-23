@@ -1,6 +1,6 @@
 "use client"
 
-import { User, UserGroup, groupColumns, userColumns } from "./columns"
+import {  UserGroup, groupColumns } from "./columns"
 import { DataTable } from "./data-table"
 import { createClient } from '@/utils/supabase/client'
 import { checkAuth } from '../actions'
@@ -10,12 +10,11 @@ import { Button } from "@/components/ui/button"
 
 function DemoPage() {
   const [data, setData] = useState<UserGroup[]>([])
-  const [userData, setUserData] = useState<User[]>([])
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)
 
-  const handleShowUsers = (groupId: string) => {
-    setSelectedGroupId(groupId === selectedGroupId ? null : groupId)
-  }
+  // const handleShowUsers = (groupId: string) => {
+  //   setSelectedGroupId(groupId === selectedGroupId ? null : groupId)
+  // }
 
   useEffect(() => {
     async function fetchData() {
@@ -38,31 +37,31 @@ function DemoPage() {
   }, [])
 
 
-  useEffect(() => {
-    async function fetchUserData() {
-      if (!selectedGroupId) {
-        setUserData([])
-        return
-      }
+  // useEffect(() => {
+  //   async function fetchUserData() {
+  //     if (!selectedGroupId) {
+  //       setUserData([])
+  //       return
+  //     }
 
-      try {
-        const supabase = createClient()
-        const { data: users, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('group_id', selectedGroupId)
-          .order('created_at', { ascending: false })
+  //     try {
+  //       const supabase = createClient()
+  //       const { data: users, error } = await supabase
+  //         .from('users')
+  //         .select('*')
+  //         .eq('group_id', selectedGroupId)
+  //         .order('created_at', { ascending: false })
 
-        if (error) throw error
-        setUserData(users || [])
-      } catch (e) {
-        console.error('Error fetching users:', e)
-        setUserData([])
-      }
-    }
+  //       if (error) throw error
+  //       setUserData(users || [])
+  //     } catch (e) {
+  //       console.error('Error fetching users:', e)
+  //       setUserData([])
+  //     }
+  //   }
 
-    fetchUserData()
-  }, [selectedGroupId])
+  //   fetchUserData()
+  // }, [selectedGroupId])
 
   return (
     <div className="container mx-auto py-10">
@@ -73,8 +72,8 @@ function DemoPage() {
         </p>
       </div>
 
-      <DataTable columns={groupColumns(handleShowUsers)} data={data} />
-
+      <DataTable columns={groupColumns} data={data} />
+{/* 
       {selectedGroupId && (
         <div className="mt-8">
           <h2 className="text-xl font-semibold text-white mb-4">Group Users</h2>
@@ -86,7 +85,7 @@ function DemoPage() {
             Import Excel
           </Button>
         </div>
-      )}
+      )} */}
 
     </div>
   )

@@ -24,8 +24,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import React from "react" 
-import { DialogNewUserGroup } from "./dialog"
+import React from "react"
+import { DialogNewUser } from "./dialog"
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
@@ -61,15 +61,15 @@ export function DataTable<TData, TValue>({
         <div>
             <div className="flex items-center justify-between py-4">
                 <Input
-                    placeholder="Filter group name..."
-                    value={(table.getColumn("group_name")?.getFilterValue() as string) ?? ""}
+                    placeholder="Filter user id..."
+                    value={(table.getColumn("user_id")?.getFilterValue() as string) ?? ""}
                     onChange={(event) =>
-                        table.getColumn("group_name")?.setFilterValue(event.target.value)
+                        table.getColumn("user_id")?.setFilterValue(event.target.value)
                     }
                     className="max-w-sm"
                 />
                 <div className="flex gap-2">
-                    <DialogNewUserGroup />
+                    <DialogNewUser />
 
                 </div>
             </div>
