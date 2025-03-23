@@ -13,12 +13,16 @@ export const maxDuration = 30;
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
-
+  
+  // 获取系统消息（包含summary）和用户消息
+  const systemMessage = messages.find((m: { role: string; }) => m.role === 'system')?.content || '';
+  
   const result = streamText({
-    model: deepseek('deepseek-reasoner'),
-    messages,
+    model: deepseek('deepseek-chat'),
+    system: `You are a helpful assistant. You must answer based on the following context and messages. ${systemMessage}`,
+    messages: messages.filter((m: { role: string; }) => m.role !== 'system'), // 过滤掉系统消息，避免重复
   });
-
+  
   return result.toDataStreamResponse();
 }
 

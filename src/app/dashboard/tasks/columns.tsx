@@ -134,8 +134,12 @@ export const columns: ColumnDef<Task>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
-                router.push(`/dashboard/tasks/${task.task_id}`)
+                if (task.status === 'success') {
+                  router.push(`/dashboard/tasks/${task.task_id}`)
+                }
               }}
+              disabled={task.status !== 'success'}
+              className={task.status !== 'success' ? 'cursor-not-allowed opacity-50' : ''}
             >
               Task Report
             </DropdownMenuItem>
