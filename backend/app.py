@@ -3,7 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from supabase import create_client, Client
-from jeans_feedback_test import generate_feedback_summary_test  # 修改导入
+from product_jeans_feedback_test import generate_feedback_summary_test  # 修改导入
  
 
 # 加载环境变量
@@ -199,6 +199,9 @@ def get_jeans_feedback():
             "message": str(e)
         }), 500
 
+@app.route('/api/user_demand', methods=['GET', 'POST'])
+def get_user_demand():
+    pass
 
 @app.route('/api/conversation', methods=['GET'])
 def get_conversation():
