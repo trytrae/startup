@@ -16,6 +16,7 @@ import {
 } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ImportExcelDialog } from "./components/ImportExcelDialog"
 import {
     Table,
     TableBody,
@@ -26,6 +27,8 @@ import {
 } from "@/components/ui/table"
 import React from "react" 
 import { DialogNewUserGroup } from "./dialog"
+import { useRouter } from "next/navigation"
+
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
@@ -39,7 +42,12 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)  // Add this line
+    const router = useRouter()
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null)
+
+    const onRefresh = () => {
+        router.refresh()
+    }
 
     const table = useReactTable({
         data,
@@ -69,7 +77,7 @@ export function DataTable<TData, TValue>({
                     className="max-w-sm"
                 />
                 <div className="flex gap-2">
-                    <DialogNewUserGroup />
+                    <ImportExcelDialog onRefresh={onRefresh} />
 
                 </div>
             </div>

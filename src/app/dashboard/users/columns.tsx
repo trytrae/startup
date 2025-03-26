@@ -53,7 +53,7 @@ export const groupColumns: ColumnDef<UserGroup>[] = [
     header: "User Amount",
     cell: ({ row }) => {
       const value = row.getValue("user_amount") as number
-      return <div className="min-w-[100px] w-full truncate text-right">{value}</div>
+      return <div className="min-w-[100px] w-full truncate ">{value}</div>
     }
   },
   {
