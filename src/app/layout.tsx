@@ -5,8 +5,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Best SAAS Kit Pro',
-  description: 'The ultimate starter kit for your SAAS project',
+  title: 'Convolens',
+  description: 'Convolens',
 }
 
 export default function RootLayout({

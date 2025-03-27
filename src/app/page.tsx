@@ -152,7 +152,7 @@ export default function Home() {
                 <span>Docs</span>
               </Link>
               <Link 
-                href="https://github.com/zainulabedeen123/best-saas-kit/discussions" 
+                href="https://github.com/zainulabedee22n123/best-saas-kit/discussions" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-sm text-white/70 hover:text-white"
@@ -165,7 +165,7 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-4">
               <Link 
-                href="https://github.com/zainulabedeen123/best-saas-kit"
+                href="https://github.com/zainulabed22een123/best-saas-kit"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-white/70 hover:text-white flex items-center space-x-1"
