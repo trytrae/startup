@@ -4,7 +4,7 @@
 import os
 from colorama import Fore
 from camel.utils import print_text_animated 
-
+from dotenv import load_dotenv
 from camel.models import ModelFactory
 from camel.types import ModelPlatformType, ModelType
 from camel.configs import QwenConfig # ChatGPTConfig
@@ -12,8 +12,11 @@ from camel.configs import QwenConfig # ChatGPTConfig
 from camel.societies import RolePlaying
 
 from getpass import getpass
-os.environ["QWEN_API_KEY"] = getpass("Please input your QWEN_API_KEY: ")
 
+# 加载环境变量
+load_dotenv()
+
+os.environ["QWEN_API_KEY"] = os.getenv('QWEN_API_KEY')
 
 # set model
 qwenModel = ModelFactory.create(

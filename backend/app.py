@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 from supabase import create_client, Client
 from openai import OpenAI
-from product_jeans_feedback_test import generate_feedback_summary_test  # 修改导入
+# from product_jeans_feedback_test import generate_feedback_summary_test  # 修改导入
  
 
 # 加载环境变量
@@ -47,6 +47,7 @@ def health_check():
 
 @app.route('/api/jeans-feedback', methods=['GET', 'POST'])
 def get_jeans_feedback():
+    print("feedback")
     if request.method == 'POST':
         try:
             data = request.json
@@ -206,19 +207,113 @@ def get_jeans_feedback():
             "message": str(e)
         }), 500
 
-
-# @app.route('/api/user_demand', methods=['GET', 'POST'])
-# def get_user_demand():
-#     if request.method == 'POST':
-#         try:
-#             data = request.json
-#             task_id = data.get('task_id')
-#             group_id = data.get('group_id')
-#     return null
+ 
 
 @app.route('/api/user_demand', methods=['GET', 'POST'])
 def get_user_demand():
-    pass
+    print("demand")
+    if request.method == 'POST':
+        try:
+            data = request.json
+            task_id = data.get('task_id')
+            group_id = data.get('group_id')
+            product_id = data.get('product_id')
+            
+            # 从各个表格获取数据
+            task_data = supabase.table('tasks').select("*").eq('task_id', task_id).execute()
+            users_data = supabase.table('users').select("*").eq('group_id', group_id).execute()
+            product_data = supabase.table('products').select("*").eq('product_id', product_id).execute()
+
+            # 检查是否成功获取所有数据
+            if not (task_data.data and users_data.data and product_data.data):
+                return jsonify({
+                    "status": "error",
+                    "message": "无法找到指定的数据"
+                }), 404
+
+            # 转换用户数据格式
+            USER_PROFILES = []
+            for user in users_data.data:
+                profile = {
+                    "职业": user['occupation'],
+                    "城市": user['city'],
+                    "生活方式": user['lifestyle'],
+                    "孩子年龄": f"{user['child_age']}岁",
+                    "童装花费": f"{user['annual_clothing_spend']}元",
+                    "历史购买": [
+                        user['purchase_history1'],
+                        user['purchase_history2'],
+                        user['purchase_history3']
+                    ]
+                }
+                USER_PROFILES.append(profile)
+
+            # 构建任务提示
+            product = product_data.data[0]
+            TASK_PROMPT = f"""作为一个童装品牌的产品企划，需要了解用户对产品的需求：
+            这是一个产品的设计方案：
+            {product['name']}
+            <image>{product['image']}</image>
+            
+            产品描述：
+            {product['description']}
+            
+            希望了解：
+            1. 您对这类产品的需求
+            2. 您期望的产品功能
+            3. 您能接受的价格范围"""
+
+            # 示例消息模板
+            SYSTEM_MESSAGE_TEMPLATE = """你是一位在{城市}工作的{职业},日常喜欢{生活方式},有一个{孩子年龄}的孩子,
+                    每年在童装上的花费是{童装花费}。你购买过的童装包括:
+                    {history_purchases}
+                    你性格开朗真诚,喜欢分享生活中的点点滴滴。在对话中要像跟朋友聊天一样自然,
+                    可以结合自己的兴趣爱好和生活经历来分享对产品的需求。"""
+
+            feedback_results = generate_feedback_summary_test(
+                user_profiles=USER_PROFILES,
+                system_message_template=SYSTEM_MESSAGE_TEMPLATE,
+                task_prompt=TASK_PROMPT
+            )
+            
+            # 保存结果到数据库
+            try:
+                conversation_data = {
+                    'status': feedback_results.get('status', 'fail'),
+                    'conversation': feedback_results.get('data', {}),
+                    'task_id': task_id
+                }
+                
+                conversation_result = supabase.table('conversations').insert(conversation_data).execute()
+                
+                if conversation_result.data:
+                    supabase.table('tasks').update({'status': 'success'}).eq('task_id', task_id).execute()
+                else:
+                    supabase.table('tasks').update({'status': 'fail'}).eq('task_id', task_id).execute()
+                
+            except Exception as e:
+                supabase.table('tasks').update({'status': 'fail'}).eq('task_id', task_id).execute()
+                print(f"Error saving conversation: {str(e)}")
+            
+            return jsonify(feedback_results)
+            
+        except Exception as e:
+            return jsonify({
+                "status": "error",
+                "message": str(e)
+            }), 500
+    
+    # GET 请求的原有逻辑
+    try:
+        return jsonify({
+            "status": "success",
+            "message": "User demand research endpoint"
+        })
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
 
 @app.route('/api/conversation', methods=['GET'])
 def get_conversation():

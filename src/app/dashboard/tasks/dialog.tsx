@@ -38,6 +38,21 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     const [users, setUsers] = useState<Array<{ group_id: string; group_name: string }>>([])
     const [products, setProducts] = useState<Array<{ product_id: string; name: string }>>([])
     
+    // 添加对话框打开时的监听
+    React.useEffect(() => {
+        if (open && mode === 'create') {
+            setFormData({
+                task_id: uuidv4(),
+                name: '',
+                type: '' as Task['type'],
+                user_portraits: '',
+                product_portraits: '',
+                status: 'pending',
+                group_id: '',
+                product_id: '',
+            })
+        }
+    }, [open, mode])
     // 添加数据获取函数
     React.useEffect(() => {
         const fetchData = async () => {
@@ -92,7 +107,11 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
             }
 
             // 发送数据到 Flask 后端
-            const response = await fetch('http://localhost:5000/api/jeans-feedback', {
+            const apiUrl = formData.type === 'User demand research' 
+                ? 'http://localhost:5000/api/user_demand'
+                : 'http://localhost:5000/api/jeans-feedback';
+                
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

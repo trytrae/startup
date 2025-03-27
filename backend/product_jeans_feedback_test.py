@@ -34,7 +34,15 @@ def agents_society_roleplay(
     # in_user_agent_kwargs_sys_message = "",
     in_model = None, 
     chat_turn_limit = 9
-) -> None:
+) -> dict:  # 修改返回类型为dict
+    # 初始化对话记录
+    conversation = {
+        "assistant_role": in_assistant_role_name,
+        "user_role": in_user_role_name,
+        "task_prompt": in_task_prompt,
+        "turns": []
+    }
+    
     role_play_session = RolePlaying(
         assistant_role_name = in_assistant_role_name,
         assistant_agent_kwargs = dict(
@@ -69,23 +77,22 @@ def agents_society_roleplay(
         n += 1
         assistant_response, user_response = role_play_session.step(input_msg)
 
-        if assistant_response.terminated:
-            print(Fore.GREEN + ("AI Assistant terminated. Reason: " f"{assistant_response.info['termination_reasons']}."))
-            break
-        if user_response.terminated:
-            print(Fore.GREEN + ("AI User terminated. Reason: " f"{user_response.info['termination_reasons']}."))
-            break
-        print_text_animated(Fore.BLUE + f"AI User:\n\n{user_response.msg.content}\n")
+        # 记录每轮对话
+        turn = {
+            "turn": n,
+            "user": user_response.msg.content,
+            "assistant": assistant_response.msg.content
+        }
+        conversation["turns"].append(turn)
 
-        if "CAMEL_TASK_DONE" in user_response.msg.content:
+        if assistant_response.terminated or user_response.terminated:
             break
         if "CAMEL_TASK_DONE" in user_response.msg.content:
             break
-        print_text_animated(Fore.GREEN + f"AI Assistant:\n\n{assistant_response.msg.content}\n")
 
         input_msg = assistant_response.msg
 
-    return 0
+    return conversation  # 返回对话记录
 
 
 
@@ -176,7 +183,7 @@ if __name__ == "__main__":
             in_user_role_name = in_user_role_name, 
             # in_user_agent_kwargs_sys_message = in_user_agent_kwargs_sys_message,
             in_model = in_model, 
-            chat_turn_limit = 5
+            chat_turn_limit = 2
         )
-
+        print(res)
 
