@@ -7,12 +7,11 @@ import { Label } from '../ui/label'
 
 interface User {
   id: string
-  email: string
-  credits: number
+  email: string 
 }
 
 export default function Header() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<any | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -20,7 +19,7 @@ export default function Header() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await getCurrentUser()
+        const userData = await getCurrentUser() // 打印 userData 以检查其值
         if (userData) {
           setUser(userData)
         }
@@ -33,8 +32,7 @@ export default function Header() {
     }
 
     fetchUser()
-  }, [])
-
+  }, [])  
   // Loading state 保持不变
   if (isLoading) {
     return (
@@ -67,7 +65,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link href="/" className="text-white font-bold text-xl">
-              *********************
+            ConvoLens - Illuminating Insights Through Consumer Conversations
             </Link>
           </div>
           
@@ -80,7 +78,7 @@ export default function Header() {
             
             <div className="flex items-center space-x-4">
               <div className="text-white/60">
-                Credits: {user?.credits || 0}
+                User: 
               </div>
               <div className="relative">
                 <button
@@ -106,8 +104,8 @@ export default function Header() {
                 {isMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                     <div className="py-1">
-                      <Link
-                        href="/dashboard"
+                      {/* <Link
+                        href="/dashboard/tasks"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -121,7 +119,7 @@ export default function Header() {
                           fetchHealthCheck();}}
                       >
                         Tasks
-                      </Label>
+                      </Label> */}
     
                       <button
                         onClick={() => {

@@ -19,8 +19,12 @@ export async function POST(req: Request) {
   
   const result = streamText({
     model: deepseek('deepseek-chat'),
-    system: `You are a helpful assistant. You must answer based on the following context and messages. ${systemMessage}`,
+    system: `You are a professional and perceptive consumer product planning and research expert. You must answer based on the following context and messages. ${systemMessage}`,
     messages: messages.filter((m: { role: string; }) => m.role !== 'system'), // 过滤掉系统消息，避免重复
+    temperature: 0.9,
+    topP: 0.7,
+    topK: 50,
+    frequencyPenalty: 0.5,
   });
   
   return result.toDataStreamResponse();
