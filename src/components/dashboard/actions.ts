@@ -20,14 +20,8 @@ export async function getCurrentUser() {
   }
   
  
-
-  const { data: userData } = await supabase
-    .from('users')
-    .select('id, email, credits')
-    .eq('id', user.id)
-    .single()
-
-  return userData
+ 
+  return user
 }
 
 
