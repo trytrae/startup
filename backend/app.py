@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 from supabase import create_client, Client
 from openai import OpenAI
-from jeans_feedback_test import generate_feedback_summary_test  # 修改导入
+from product_jeans_feedback_test import generate_feedback_summary_test  # 修改导入
  
 
 # 加载环境变量
@@ -216,6 +216,9 @@ def get_jeans_feedback():
 #             group_id = data.get('group_id')
 #     return null
 
+@app.route('/api/user_demand', methods=['GET', 'POST'])
+def get_user_demand():
+    pass
 
 @app.route('/api/conversation', methods=['GET'])
 def get_conversation():
@@ -326,21 +329,21 @@ def generate_summary_from_conversation(conversation):
         # 构建提示词
         prompt = f"""请分析以下用户反馈对话，并提供JSON格式的结构化总结：
 
-对话内容：
-{conversation_text}
+        对话内容：
+        {conversation_text}
 
-请以JSON格式输出分析结果，包含以下字段：
-- 关键反馈：数组，包含3-5条关键反馈要点
-- 改进建议：数组，包含2-4条具体的改进建议
-- 市场潜力：字符串，评估产品的市场潜力并给出建议
+        请以JSON格式输出分析结果，包含以下字段：
+        - 关键反馈：数组，包含3-5条关键反馈要点
+        - 改进建议：数组，包含2-4条具体的改进建议
+        - 市场潜力：字符串，评估产品的市场潜力并给出建议
 
-输出格式示例：
-{{
-    "关键反馈": ["反馈1", "反馈2", "反馈3"],
-    "改进建议": ["建议1", "建议2"],
-    "市场潜力": "市场潜力分析..."
-}}
-"""
+        输出格式示例：
+        {{
+            "关键反馈": ["反馈1", "反馈2", "反馈3"],
+            "改进建议": ["建议1", "建议2"],
+            "市场潜力": "市场潜力分析..."
+        }}
+        """
 
         # 调用 DeepSeek API
         response = client.chat.completions.create(
