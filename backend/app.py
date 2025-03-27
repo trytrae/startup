@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 import os
 from supabase import create_client, Client
 from openai import OpenAI
-from product_jeans_feedback_test import generate_feedback_summary_test  # 修改导入
- 
-
+# from product_jeans_feedback_test import generate_feedback_summary_test  # 修改导入
+from product_jeans_feedback import conduct_product_feedback  # 修改导入
+from profile_user_demand import conduct_user_demand_research
 # 加载环境变量
 load_dotenv()
 
@@ -47,40 +47,32 @@ def health_check():
 
 @app.route('/api/jeans-feedback', methods=['GET', 'POST'])
 def get_jeans_feedback():
+    print("feedback")
     if request.method == 'POST':
         try:
             data = request.json
-            task_id = data.get('task_id')
-            group_id = data.get('group_id')
-            product_id = data.get('product_id')
+            task_id = data.get('task_id') 
             
             # 从各个表格获取数据
             task_data = supabase.table('tasks').select("*").eq('task_id', task_id).execute()
-            users_data = supabase.table('users').select("*").eq('group_id', group_id).execute()
-            product_data = supabase.table('products').select("*").eq('product_id', product_id).execute()
  
-            # 检查是否成功获取所有数据
-            if not (task_data.data and users_data.data and product_data.data):
+            # 确保 task_data 有数据
+            if not task_data.data:
                 return jsonify({
                     "status": "error",
-                    "message": "无法找到指定的数据"
+                    "message": "无法找到指定的任务"
                 }), 404
+                
+            # 从 task_data 中获取 group_id 和 product_id
+            group_id = task_data.data[0]['group_id']
+            product_id = task_data.data[0]['product_id']
+            
+            # 获取用户和产品数据
+            users_data = supabase.table('users').select("*").eq('group_id', group_id).execute()
+            product_data = supabase.table('products').select("*").eq('product_id', product_id).execute()
             
 
-            # USER_PROFILES = [
-
-            # {
-
-            # "职业": "数字营销经理", "城市": "上海", "生活方式": "咖啡品鉴和马术",
-
-            # "孩子年龄": "8岁", "童装花费": "8000元",
-
-            # "历史购买": ["宣纸速干T恤", "软软壳户外款外套", "撸猫棉打底衫"]
-
-            # }
-
-            # ]
-
+ 
             # 转换用户数据格式
             USER_PROFILES = []
             for user in users_data.data:
@@ -98,65 +90,28 @@ def get_jeans_feedback():
                 }
                 USER_PROFILES.append(profile)
             
-
-
-        #    # 示例任务提示
-        #     TASK_PROMPT = """作为一个童装品牌的产品企划,需要真诚地了解用户对新产品的想法:
-        #     这是一条直筒牛仔裤的设计方案：
-        #     <image>d:\Ai\与人对话\roleplay\jeans_image.jpg</image>
-            
-        #     舒适性：
-        #     1. 高弹腰头，长久坐也不勒腰
-        #     2. 面料为95.6%棉 4.4%氨纶柔软有弹力，裤型微宽松，盘腿而坐也舒适
-        #     得体性：
-        #     1. 颜色为中深色经典牛仔蓝，采用石磨酵素水洗工艺，色彩更加均匀，手感更柔软
-        #     2. 水洗不易缩水变形，膝盖不易鼓包
-        #     3. 微宽松直筒版型，上班和日常都适配
-            
-        #     希望了解：
-        #     1. 您对这款产品的真实想法
-        #     2. 是否愿意购买，可以接受的价格范围
-        #     3. 有什么改进建议"""
-
-
+ 
             # 构建任务提示
             product = product_data.data[0]  # 获取第一个产品数据
-            TASK_PROMPT = f"""作为一个童装品牌的产品企划,需要真诚地了解用户对新产品的想法:
-            这是一个产品的设计方案：
-            {product['name']}
-            <image>{product['image']}</image>
-            
-            产品描述：
-            {product['description']}
-            
-            希望了解：
-            1. 您对这款产品的真实想法
-            2. 是否愿意购买，可以接受的价格范围
-            3. 有什么改进建议"""
-
-
-            # 示例消息模板
-            SYSTEM_MESSAGE_TEMPLATE = """你是一位在{城市}工作的{职业},日常喜欢{生活方式},有一个{孩子年龄}的孩子,
-                    每年在童装上的花费是{童装花费}。你购买过的童装包括:
-                    {history_purchases}
-                    你性格开朗真诚,喜欢分享生活中的点点滴滴。在对话中要像跟朋友聊天一样自然,
-                    可以结合自己的兴趣爱好和生活经历来分享对产品的真实想法。"""
-            
-
-
-
-            feedback_results = generate_feedback_summary_test(
-                user_profiles=USER_PROFILES,
-                system_message_template=SYSTEM_MESSAGE_TEMPLATE,
-                task_prompt=TASK_PROMPT
-            )
-            print(feedback_results)
+            print("Starting product feedback generation...")
+            print(product)
+            try:
+                feedback_results = conduct_product_feedback(
+                    user_profiles=USER_PROFILES,
+                    img_url=product['image'],
+                    product_description=product['description'],
+                    product_name=product['name']
+                )
+                print("Feedback results:", feedback_results)
+            except Exception as e:
+                print(f"Error in conduct_product_feedback: {str(e)}")
+                raise
             
             try:
                 # 将结果保存到 conversations 表
                 conversation_data = {
-                    'status': feedback_results.get('status', 'fail'),
-                    'conversation': feedback_results.get('data', {}),
+                    'status': 'success' if feedback_results else 'fail',
+                    'conversation': feedback_results,
                     'task_id': task_id
                 }
                 
@@ -182,43 +137,89 @@ def get_jeans_feedback():
                 "status": "error",
                 "message": str(e)
             }), 500
-    
-    # GET 请求的原有逻辑
-    try:
-        # 示例用户画像数据
-        USER_PROFILES = [
-            {
-                "职业": "数字营销经理", "城市": "上海", "生活方式": "咖啡品鉴和马术", 
-                "孩子年龄": "8岁", "童装花费": "8000元",
-                "历史购买": ["宣纸速干T恤", "软软壳户外款外套", "撸猫棉打底衫"]
-            }
-        ]
-        
-        feedback_results = generate_feedback_summary_test(
-            user_profiles=USER_PROFILES,
-            system_message_template="模拟系统消息模板",
-            task_prompt="模拟任务提示"
-        )
-        return jsonify(feedback_results)
-    except Exception as e:
-        return jsonify({
-            "status": "error",
-            "message": str(e)
-        }), 500
-
-
-# @app.route('/api/user_demand', methods=['GET', 'POST'])
-# def get_user_demand():
-#     if request.method == 'POST':
-#         try:
-#             data = request.json
-#             task_id = data.get('task_id')
-#             group_id = data.get('group_id')
-#     return null
+     
+ 
 
 @app.route('/api/user_demand', methods=['GET', 'POST'])
 def get_user_demand():
-    pass
+    print("demand")
+    if request.method == 'POST':
+        try:
+            data = request.json
+            task_id = data.get('task_id') 
+            
+            # 从各个表格获取数据
+            task_data = supabase.table('tasks').select("*").eq('task_id', task_id).execute()
+ 
+            # 确保 task_data 有数据
+            # 检查是否成功获取所有数据
+            if not (task_data.data ):
+                return jsonify({
+                    "status": "error",
+                    "message": "无法找到指定的数据"
+                }), 404
+            # 从 task_data 中获取 group_id
+            group_id = task_data.data[0]['group_id']
+ 
+            users_data = supabase.table('users').select("*").eq('group_id', group_id).execute()
+            print(users_data)
+            # 转换用户数据格式
+            USER_PROFILES = []
+            for user in users_data.data:
+                profile = {
+                    "职业": user['occupation'],
+                    "城市": user['city'],
+                    "生活方式": user['lifestyle'],
+                    "孩子年龄": f"{user['child_age']}岁",
+                    "童装花费": f"{user['annual_clothing_spend']}元",
+                    "历史购买": [
+                        user['purchase_history1'],
+                        user['purchase_history2'],
+                        user['purchase_history3']
+                    ]
+                }
+                USER_PROFILES.append(profile)
+            
+            print("Starting user demand research...")
+            try:
+                research_results = conduct_user_demand_research(
+                    user_profiles=USER_PROFILES
+                )
+                print("Research results:", research_results)
+            except Exception as e:
+                print(f"Error in conduct_user_demand_research: {str(e)}")
+                raise
+            
+            try:
+                # 将结果保存到 conversations 表
+                conversation_data = {
+                    'status': 'success' if research_results else 'fail',
+                    'conversation': research_results,
+                    'task_id': task_id
+                }
+                
+                # 插入数据到 conversations 表
+                conversation_result = supabase.table('conversations').insert(conversation_data).execute()
+                
+                # 如果 conversations 表写入成功，更新 tasks 表状态为 success
+                if conversation_result.data:
+                    supabase.table('tasks').update({'status': 'success'}).eq('task_id', task_id).execute()
+                else:
+                    # 如果写入失败，更新 tasks 表状态为 fail
+                    supabase.table('tasks').update({'status': 'fail'}).eq('task_id', task_id).execute()
+                
+            except Exception as e:
+                # 如果发生异常，更新 tasks 表状态为 fail
+                supabase.table('tasks').update({'status': 'fail'}).eq('task_id', task_id).execute()
+                print(f"Error saving conversation: {str(e)}")
+            
+            return jsonify(research_results)
+            
+        except Exception as e:
+            return jsonify({
+                "status": "error",
+                "message": str(e)
+            }), 500
 
 @app.route('/api/conversation', methods=['GET'])
 def get_conversation():
@@ -275,7 +276,7 @@ def get_summary():
             .order('created_at', desc=True) \
             .limit(1) \
             .execute()
-
+        print(task_id)
         # 检查是否有数据返回
         if response.data and response.data[0].get('summary'):
             return jsonify({
@@ -286,8 +287,17 @@ def get_summary():
         # 如果没有 summary，生成新的总结
         if response.data:
             conversation = response.data[0].get('conversation', {})
-            summary = generate_summary_from_conversation(conversation)
-            
+ 
+            try:
+                summary = generate_summary_from_conversation(conversation)
+                print(summary)
+            except Exception as e:
+                print(f"Error generating summary: {str(e)}")
+                summary = {
+                    "关键反馈": ["生成摘要时发生错误"],
+                    "改进建议": ["请稍后重试"],
+                    "市场潜力": "暂无数据"
+                }
             try:
                 # 更新最新会话记录的 summary 字段
                 supabase.table('conversations') \
@@ -323,9 +333,17 @@ def generate_summary_from_conversation(conversation):
         dict: 包含关键反馈、改进建议和市场潜力的总结
     """
     try:
+        # 检查 conversation 是否为空
+        if not conversation:
+            return {
+                "关键反馈": ["无有效对话内容"],
+                "改进建议": ["请确保有有效的对话数据"],
+                "市场潜力": "由于缺少对话数据，无法评估市场潜力"
+            }
+            
         # 将对话内容转换为字符串
         conversation_text = str(conversation)
-        
+
         # 构建提示词
         prompt = f"""请分析以下用户反馈对话，并提供JSON格式的结构化总结：
 
@@ -343,6 +361,8 @@ def generate_summary_from_conversation(conversation):
             "改进建议": ["建议1", "建议2"],
             "市场潜力": "市场潜力分析..."
         }}
+
+        绝对不要添加任何markdown的标记，比如“```json”，“```”等，只输出JSON格式的内容。
         """
 
         # 调用 DeepSeek API
@@ -358,12 +378,12 @@ def generate_summary_from_conversation(conversation):
             max_tokens=512,
             temperature=0.9,
             top_p=0.7,
-            frequency_penalty=0.5
+            frequency_penalty=0.5,
         )
 
         # 解析 API 响应
         summary_text = response.choices[0].message.content
-        
+        print(summary_text)
         # 直接解析JSON响应
         import json
         try:

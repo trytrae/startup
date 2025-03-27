@@ -38,6 +38,21 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     const [users, setUsers] = useState<Array<{ group_id: string; group_name: string }>>([])
     const [products, setProducts] = useState<Array<{ product_id: string; name: string }>>([])
     
+    // 添加对话框打开时的监听
+    React.useEffect(() => {
+        if (open && mode === 'create') {
+            setFormData({
+                task_id: uuidv4(),
+                name: '',
+                type: '' as Task['type'],
+                user_portraits: '',
+                product_portraits: '',
+                status: 'pending',
+                group_id: '',
+                product_id: '',
+            })
+        }
+    }, [open, mode])
     // 添加数据获取函数
     React.useEffect(() => {
         const fetchData = async () => {
@@ -75,32 +90,41 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     
     const handleSubmit = async () => {
         try {
-            // 首先保存到 Supabase
+            // Prepare the data before saving
+            const dataToSave = {
+                ...formData,
+                // For User demand research, we'll set a default value for product_id
+                product_id: formData.type === 'User demand research' ? null : formData.product_id,
+                product_portraits: formData.type === 'User demand research' ? '--' : formData.product_portraits
+            };
+            // Save to Supabase
             if (mode === 'edit' && task) {
                 const { error } = await supabase
                     .from('tasks')
-                    .update(formData)
-                    .eq('task_id', task.task_id)  // 从 id 改为 task_id
+                    .update(dataToSave)
+                    .eq('task_id', task.task_id)
 
                 if (error) throw error
             } else {
                 const { error } = await supabase
                     .from('tasks')
-                    .insert([formData])
+                    .insert([dataToSave])
 
                 if (error) throw error
             }
 
             // 发送数据到 Flask 后端
-            const response = await fetch('http://localhost:5000/api/jeans-feedback', {
+            const apiUrl = formData.type === 'User demand research' 
+                ? 'http://localhost:5000/api/user_demand'
+                : 'http://localhost:5000/api/jeans-feedback';
+                
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     task_id: formData.task_id,
-                    group_id: formData.group_id,
-                    product_id: formData.product_id,
                 }),
             });
 
@@ -165,8 +189,15 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                     <div className="flex flex-col space-y-1.5">
                         <Label htmlFor="type">Task Type</Label>
                         <Select 
-                            value={formData.type} // 添加这行
-                            onValueChange={(value) => handleInputChange('type', value)}
+                            value={formData.type}
+                            onValueChange={(value) => {
+                                handleInputChange('type', value);
+                                // 当选择 User demand research 时，设置默认值
+                                if (value === 'User demand research') {
+                                    handleInputChange('product_portraits', '--');
+                                    handleInputChange('product_id', '');
+                                }
+                            }}
                         >
                             <SelectTrigger id="type">
                                 <SelectValue placeholder="Select" />
@@ -205,7 +236,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                         </Select>
                     </div>
 
-                    <div className="flex flex-col space-y-1.5">
+                    {formData.type !== 'User demand research' &&(<div className="flex flex-col space-y-1.5">
                         <Label htmlFor="product_portraits">Product Portraits</Label>
                         <Select 
                             value={formData.product_portraits}
@@ -230,7 +261,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                                 ))}
                             </SelectContent>
                         </Select>
-                    </div>
+                    </div>)}
                 </div>
                 <DialogFooter>
                     <Button type="submit" onClick={handleSubmit}>Save</Button>
