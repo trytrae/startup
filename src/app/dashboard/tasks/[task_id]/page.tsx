@@ -85,7 +85,10 @@ export default async function TaskReport({
               <h2 className="text-white/60">Product Portraits</h2>
               <p className="text-white">{task.product_portraits}</p>
             </div>
-            {/* 添加更多任务详情 */}
+            <div>
+              <h2 className="text-white/60">Task Type</h2>
+              <p className="text-white">{task.type}</p>
+            </div>
           </div>
         </div>
         <div>
