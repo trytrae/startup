@@ -90,18 +90,25 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     
     const handleSubmit = async () => {
         try {
-            // 首先保存到 Supabase
+            // Prepare the data before saving
+            const dataToSave = {
+                ...formData,
+                // For User demand research, we'll set a default value for product_id
+                product_id: formData.type === 'User demand research' ? null : formData.product_id,
+                product_portraits: formData.type === 'User demand research' ? '--' : formData.product_portraits
+            };
+            // Save to Supabase
             if (mode === 'edit' && task) {
                 const { error } = await supabase
                     .from('tasks')
-                    .update(formData)
-                    .eq('task_id', task.task_id)  // 从 id 改为 task_id
+                    .update(dataToSave)
+                    .eq('task_id', task.task_id)
 
                 if (error) throw error
             } else {
                 const { error } = await supabase
                     .from('tasks')
-                    .insert([formData])
+                    .insert([dataToSave])
 
                 if (error) throw error
             }
@@ -118,8 +125,6 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                 },
                 body: JSON.stringify({
                     task_id: formData.task_id,
-                    group_id: formData.group_id,
-                    product_id: formData.product_id,
                 }),
             });
 
@@ -184,8 +189,15 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                     <div className="flex flex-col space-y-1.5">
                         <Label htmlFor="type">Task Type</Label>
                         <Select 
-                            value={formData.type} // 添加这行
-                            onValueChange={(value) => handleInputChange('type', value)}
+                            value={formData.type}
+                            onValueChange={(value) => {
+                                handleInputChange('type', value);
+                                // 当选择 User demand research 时，设置默认值
+                                if (value === 'User demand research') {
+                                    handleInputChange('product_portraits', '--');
+                                    handleInputChange('product_id', '');
+                                }
+                            }}
                         >
                             <SelectTrigger id="type">
                                 <SelectValue placeholder="Select" />
@@ -224,7 +236,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                         </Select>
                     </div>
 
-                    <div className="flex flex-col space-y-1.5">
+                    {formData.type !== 'User demand research' &&(<div className="flex flex-col space-y-1.5">
                         <Label htmlFor="product_portraits">Product Portraits</Label>
                         <Select 
                             value={formData.product_portraits}
@@ -249,7 +261,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                                 ))}
                             </SelectContent>
                         </Select>
-                    </div>
+                    </div>)}
                 </div>
                 <DialogFooter>
                     <Button type="submit" onClick={handleSubmit}>Save</Button>

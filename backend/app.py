@@ -51,21 +51,25 @@ def get_jeans_feedback():
     if request.method == 'POST':
         try:
             data = request.json
-            task_id = data.get('task_id')
-            group_id = data.get('group_id')
-            product_id = data.get('product_id')
+            task_id = data.get('task_id') 
             
             # 从各个表格获取数据
             task_data = supabase.table('tasks').select("*").eq('task_id', task_id).execute()
-            users_data = supabase.table('users').select("*").eq('group_id', group_id).execute()
-            product_data = supabase.table('products').select("*").eq('product_id', product_id).execute()
  
-            # 检查是否成功获取所有数据
-            if not (task_data.data and users_data.data and product_data.data):
+            # 确保 task_data 有数据
+            if not task_data.data:
                 return jsonify({
                     "status": "error",
-                    "message": "无法找到指定的数据"
+                    "message": "无法找到指定的任务"
                 }), 404
+                
+            # 从 task_data 中获取 group_id 和 product_id
+            group_id = task_data.data[0]['group_id']
+            product_id = task_data.data[0]['product_id']
+            
+            # 获取用户和产品数据
+            users_data = supabase.table('users').select("*").eq('group_id', group_id).execute()
+            product_data = supabase.table('products').select("*").eq('product_id', product_id).execute()
             
 
  
@@ -142,20 +146,23 @@ def get_user_demand():
     if request.method == 'POST':
         try:
             data = request.json
-            task_id = data.get('task_id')
-            group_id = data.get('group_id')
+            task_id = data.get('task_id') 
             
             # 从各个表格获取数据
             task_data = supabase.table('tasks').select("*").eq('task_id', task_id).execute()
-            users_data = supabase.table('users').select("*").eq('group_id', group_id).execute()
  
+            # 确保 task_data 有数据
             # 检查是否成功获取所有数据
-            if not (task_data.data and users_data.data):
+            if not (task_data.data ):
                 return jsonify({
                     "status": "error",
                     "message": "无法找到指定的数据"
                 }), 404
-            
+            # 从 task_data 中获取 group_id
+            group_id = task_data.data[0]['group_id']
+ 
+            users_data = supabase.table('users').select("*").eq('group_id', group_id).execute()
+            print(users_data)
             # 转换用户数据格式
             USER_PROFILES = []
             for user in users_data.data:
