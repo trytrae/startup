@@ -152,7 +152,7 @@ export default function Home() {
                 <span>Docs</span>
               </Link>
               <Link 
-                href="https://github.com/zainulabedee22n123/best-saas-kit/discussions" 
+                href="https://github.com" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 className="text-sm text-white/70 hover:text-white"
@@ -165,7 +165,7 @@ export default function Home() {
             </div>
             <div className="flex items-center space-x-4">
               <Link 
-                href="https://github.com/zainulabed22een123/best-saas-kit"
+                href="https://github.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm text-white/70 hover:text-white flex items-center space-x-1"
@@ -227,7 +227,7 @@ export default function Home() {
                   Get Started
                 </Link>
                 <Link
-                  href="https://github.com/zainulabedeen123/best-saas-kit"
+                  href="https://github.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex justify-center items-center px-6 py-3 rounded-lg border border-white/10 text-white font-medium hover:bg-white/5 transition-colors"
@@ -753,7 +753,7 @@ export default function Home() {
               <h3 className="font-semibold text-white mb-4">Resources</h3>
               <ul className="space-y-2">
                 <li><Link 
-                  href="https://github.com/zainulabedeen123/best-saas-kit/discussions" 
+                  href="https://github.com/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-white/70 hover:text-white"
@@ -769,7 +769,7 @@ export default function Home() {
               <h3 className="font-semibold text-white mb-4">Connect</h3>
               <ul className="space-y-2">
                 <li><Link href="https://twitter.com" className="text-white/70 hover:text-white">Twitter</Link></li>
-                <li><Link href="https://github.com/zainulabedeen123/best-saas-kit" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white">GitHub</Link></li>
+                <li><Link href="https://github.com/" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white">GitHub</Link></li>
                 <li><Link href="https://discord.com" className="text-white/70 hover:text-white">Discord</Link></li>
                 <li><Link href="/newsletter" className="text-white/70 hover:text-white">Newsletter</Link></li>
               </ul>

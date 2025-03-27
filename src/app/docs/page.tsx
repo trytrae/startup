@@ -59,12 +59,12 @@ const sections: Section[] = [
           {
             title: 'Clone the Repository',
             description: 'Start by cloning the repository to your local machine.',
-            code: 'git clone https://github.com/yourusername/best-saas-kit.git',
+            code: 'git clone https://github.com/',
           },
           {
             title: 'Install Dependencies',
             description: 'Navigate to the project directory and install the required dependencies.',
-            code: 'cd best-saas-kit\nnpm install',
+            code: 'cd convolens\nnpm install',
           },
           {
             title: 'Environment Setup',
@@ -76,12 +76,7 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
-# Stripe
-STRIPE_SECRET_KEY=your_stripe_secret_key
-STRIPE_WEBHOOK_SECRET=your_webhook_secret
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_publishable_key
-
+ 
 # Email (Resend)
 RESEND_API_KEY=your_resend_api_key`,
           },
