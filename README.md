@@ -1,20 +1,4 @@
-# Best SaaS Kit Pro 🚀
-
-A modern, production-ready SaaS starter kit built with Next.js 15, TypeScript, Tailwind CSS, and more. Perfect for launching your next SaaS project quickly and efficiently.
-
-![SaaS Kit Banner](public/Saas-Header.png)
-
-## 🌟 Features
-
-- ⚡ **Next.js 15** with App Router & Server Actions
-- 🎨 **Tailwind CSS 3.3** & **shadcn/ui** for beautiful UI
-- 📱 **Fully Responsive** design
-- 🔐 **Authentication** with Supabase
-- 💳 **Stripe Integration** for payments
-- 📧 **Email Integration** with Resend
-- 🎯 **SEO Optimized**
-- 🌙 **Dark Mode** ready
-- 🔍 **Type Safe** with TypeScript 5.3
+# Convolens
 
 ## 🚀 Getting Started
 
@@ -45,9 +29,9 @@ Before you begin, ensure you have the following installed:
 4. **Set Up Environment Variables**
    - Copy the example environment file:
      ```bash
-     cp .env.example .env.local
+     cp .env.example .env 
      ```
-   - Open `.env.local` and fill in your environment variables:
+   - Open `.env` and fill in your environment variables:
      ```env
      # App
      NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -56,14 +40,7 @@ Before you begin, ensure you have the following installed:
      NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
      NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
      SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
-     # Stripe
-     STRIPE_SECRET_KEY=your_stripe_secret_key
-     STRIPE_WEBHOOK_SECRET=your_webhook_secret
-     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_publishable_key
-
-     # Email (Resend)
-     RESEND_API_KEY=your_resend_api_key
+ 
      ```
 
 5. **Run Development Server**
@@ -81,25 +58,13 @@ Before you begin, ensure you have the following installed:
 1. Create a [Supabase](https://supabase.com/) account
 2. Create a new project
 3. Go to Project Settings > API
-4. Copy the URL and anon key to your `.env.local`
-
-### Setting Up Stripe
-
-1. Create a [Stripe](https://stripe.com/) account
-2. Get your API keys from the Stripe Dashboard
-3. Add them to your `.env.local`
-4. Set up webhook endpoints (detailed in documentation)
-
-### Setting Up Email with Resend
-
-1. Create a [Resend](https://resend.com/) account
-2. Get your API key
-3. Add it to your `.env.local`
+4. Copy the URL and anon key to your `.env`
+ 
 
 ## 📚 Project Structure
 
 ```
-best-saas-kit/
+convolens/
 ├── src/
 │   ├── app/             # Next.js app router pages
 │   ├── components/      # React components
@@ -128,8 +93,6 @@ best-saas-kit/
 - [Next.js](https://nextjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [shadcn/ui](https://ui.shadcn.com/)
-- [Supabase](https://supabase.com/)
-- [Stripe](https://stripe.com/)
-- [Resend](https://resend.com/)
+- [Supabase](https://supabase.com/) 
 
  

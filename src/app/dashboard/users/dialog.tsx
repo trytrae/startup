@@ -100,7 +100,8 @@ export function DialogNewUserGroup({ group, mode = 'create' }: { group?: UserGro
                             id="userAmount" 
                             type="number"
                             value={formData.user_amount}
-                            onChange={(e) => handleInputChange('user_amount', Number(e.target.value))}
+                            disabled
+                            // onChange={(e) => handleInputChange('user_amount', Number(e.target.value))}
                         />
                     </div>
                 </div>

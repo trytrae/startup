@@ -17,7 +17,12 @@ import { DialogNewUser } from "./dialog"  // 在users的相关文件中
 import { createClient } from '@/utils/supabase/client'
 import { useRouter } from "next/navigation"
 import { useState } from 'react'
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -84,7 +89,7 @@ export const userColumns: ColumnDef<User>[] = [
     cell: ({ row }) => {
       const value = row.getValue("annual_clothing_spend") as number  // Changed here too
       return (
-        <div className="min-w-[120px] w-full truncate text-right">
+        <div className="min-w-[120px] w-full truncate ">
           {value ? `¥${value.toLocaleString()}` : '-'}
         </div>
       )
@@ -95,7 +100,18 @@ export const userColumns: ColumnDef<User>[] = [
     header: "Purchase History 1",
     cell: ({ row }) => {
       const value = row.getValue("purchase_history1") as string
-      return <div className="min-w-[200px] w-full truncate">{value}</div>
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <div className="w-[200px] truncate">{value}</div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{value}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
     }
   },
   {
@@ -103,7 +119,18 @@ export const userColumns: ColumnDef<User>[] = [
     header: "Purchase History 2",
     cell: ({ row }) => {
       const value = row.getValue("purchase_history2") as string
-      return <div className="min-w-[200px] w-full truncate">{value}</div>
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <div className="w-[200px] truncate">{value}</div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{value}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
     }
   },
   {
@@ -111,7 +138,18 @@ export const userColumns: ColumnDef<User>[] = [
     header: "Purchase History 3",
     cell: ({ row }) => {
       const value = row.getValue("purchase_history3") as string
-      return <div className="min-w-[200px] w-full truncate">{value}</div>
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <div className="w-[200px] truncate">{value}</div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{value}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
     }
   },
    
@@ -127,6 +165,10 @@ export const userColumns: ColumnDef<User>[] = [
           </Label>
         )
       },
+    cell: ({ row }) => {
+      const value = row.getValue("created_at") as string
+      return <div className="min-w-[100px] w-full truncate">{value}</div>
+    }
   }, 
 //   {
 //     accessorKey: "amount",
@@ -141,55 +183,55 @@ export const userColumns: ColumnDef<User>[] = [
 //       return <div className="text-right font-medium">{formatted}</div>
 //     },
 //   },
-  {
-    id: "actions",
-    cell: ({ row }) => {
-      const user = row.original
-      const router = useRouter()
-      
-      const handleDelete = async () => {
-        try {
-          const supabase = createClient() 
-          const { error } = await supabase
-            .from('users')
-            .delete()
-            .eq('user_id', user.user_id)
+    // {
+    //   id: "actions",
+    //   cell: ({ row }) => {
+    //     const user = row.original
+    //     const router = useRouter()
+        
+    //     const handleDelete = async () => {
+    //       try {
+    //         const supabase = createClient() 
+    //         const { error } = await supabase
+    //           .from('users')
+    //           .delete()
+    //           .eq('user_id', user.user_id)
 
-          if (error) throw error
-          
-          router.refresh()
-        } catch (error) {
-          console.error('Error deleting user:', error)
-        }
-      }
- 
+    //         if (error) throw error
+            
+    //         router.refresh()
+    //       } catch (error) {
+    //         console.error('Error deleting user:', error)
+    //       }
+    //     }
+  
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Label className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Label>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
- 
-            >
-              Check Details
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DialogNewUser user={user} mode="edit" />
-            <DropdownMenuItem 
-              onClick={handleDelete}
-              className="text-red-600 focus:text-red-600"
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
-  },
+    //     return (
+    //       <DropdownMenu>
+    //         <DropdownMenuTrigger asChild>
+    //           <Label className="h-8 w-8 p-0">
+    //             <span className="sr-only">Open menu</span>
+    //             <MoreHorizontal className="h-4 w-4" />
+    //           </Label>
+    //         </DropdownMenuTrigger>
+    //         <DropdownMenuContent align="end">
+    //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+    //           <DropdownMenuItem
+  
+    //           >
+    //             Check Details
+    //           </DropdownMenuItem>
+    //           <DropdownMenuSeparator />
+    //           <DialogNewUser user={user} mode="edit" />
+    //           <DropdownMenuItem 
+    //             onClick={handleDelete}
+    //             className="text-red-600 focus:text-red-600"
+    //           >
+    //             Delete
+    //           </DropdownMenuItem>
+    //         </DropdownMenuContent>
+    //       </DropdownMenu>
+    //     )
+    //   },
+    // },
 ]

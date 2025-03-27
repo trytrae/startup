@@ -110,7 +110,7 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
+            {/* <DialogTrigger asChild>
                 {mode === 'create' ? (
                     <Button>Add New</Button>
                 ) : (
@@ -118,7 +118,7 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
                         Edit
                     </DropdownMenuItem>
                 )}
-            </DialogTrigger>
+            </DialogTrigger> */}
             <DialogContent className="sm:max-w-[625px]">
                 <DialogHeader>
                     <DialogTitle>{mode === 'create' ? 'Add New User' : 'Edit User'}</DialogTitle>

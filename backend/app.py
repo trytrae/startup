@@ -3,6 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from supabase import create_client, Client
+from openai import OpenAI
 from product_jeans_feedback_test import generate_feedback_summary_test  # 修改导入
  
 
@@ -13,6 +14,12 @@ load_dotenv()
 supabase: Client = create_client(
     os.getenv('NEXT_PUBLIC_SUPABASE_URL'),
     os.getenv('NEXT_PUBLIC_SUPABASE_ANON_KEY')
+)
+
+# 初始化 DeepSeek 客户端
+client = OpenAI(
+    api_key=os.getenv('DEEPSEEK_API_KEY'),
+    base_url="https://api.deepseek.com"
 )
 
 
@@ -199,6 +206,16 @@ def get_jeans_feedback():
             "message": str(e)
         }), 500
 
+
+# @app.route('/api/user_demand', methods=['GET', 'POST'])
+# def get_user_demand():
+#     if request.method == 'POST':
+#         try:
+#             data = request.json
+#             task_id = data.get('task_id')
+#             group_id = data.get('group_id')
+#     return null
+
 @app.route('/api/user_demand', methods=['GET', 'POST'])
 def get_user_demand():
     pass
@@ -266,42 +283,102 @@ def get_summary():
                 "summary": response.data[0]['summary']
             })
         
-        # 如果没有数据或 summary 为空，返回 mock 数据
-        mock_summary = {
-            "关键反馈": [
-                "产品设计新颖，符合当下潮流",
-                "材质舒适，适合儿童日常活动",
-                "价格定位合理，性价比高"
-            ],
-            "改进建议": [
-                "可以增加更多颜色选择",
-                "建议增加防污处理",
-                "希望有更多尺码选择"
-            ],
-            "市场潜力": "根据用户反馈，产品市场接受度高，预计销售情况良好。建议重点关注产品质量控制和售后服务。"
-        }
-        
-        # 如果有会话记录，更新最新的记录
+        # 如果没有 summary，生成新的总结
         if response.data:
+            conversation = response.data[0].get('conversation', {})
+            summary = generate_summary_from_conversation(conversation)
+            
             try:
                 # 更新最新会话记录的 summary 字段
                 supabase.table('conversations') \
-                    .update({'summary': mock_summary}) \
+                    .update({'summary': summary}) \
                     .eq('conversation_id', response.data[0]['conversation_id']) \
                     .execute()
             except Exception as e:
                 print(f"Error updating summary: {str(e)}")
+            
+            return jsonify({
+                "status": "success",
+                "summary": summary
+            })
         
         return jsonify({
-            "status": "success",
-            "summary": mock_summary, 
-        })
+            "status": "error",
+            "message": "未找到相关会话记录"
+        }), 404
 
     except Exception as e:
         return jsonify({
             "status": "error",
             "message": str(e)
         }), 500
+
+
+def generate_summary_from_conversation(conversation):
+    """
+    从对话内容生成总结
+    Args:
+        conversation: 对话内容字典
+    Returns:
+        dict: 包含关键反馈、改进建议和市场潜力的总结
+    """
+    try:
+        # 将对话内容转换为字符串
+        conversation_text = str(conversation)
+        
+        # 构建提示词
+        prompt = f"""请分析以下用户反馈对话，并提供JSON格式的结构化总结：
+
+对话内容：
+{conversation_text}
+
+请以JSON格式输出分析结果，包含以下字段：
+- 关键反馈：数组，包含3-5条关键反馈要点
+- 改进建议：数组，包含2-4条具体的改进建议
+- 市场潜力：字符串，评估产品的市场潜力并给出建议
+
+输出格式示例：
+{{
+    "关键反馈": ["反馈1", "反馈2", "反馈3"],
+    "改进建议": ["建议1", "建议2"],
+    "市场潜力": "市场潜力分析..."
+}}
+"""
+
+        # 调用 DeepSeek API
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a professional and perceptive consumer product planning and research expert. Please ensure your response is in valid JSON format."
+                },
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=512,
+            temperature=0.9,
+            top_p=0.7,
+            frequency_penalty=0.5
+        )
+
+        # 解析 API 响应
+        summary_text = response.choices[0].message.content
+        
+        # 直接解析JSON响应
+        import json
+        try:
+            summary = json.loads(summary_text)
+        except json.JSONDecodeError as e:
+            print(f"Error parsing JSON response: {str(e)}")
+            raise
+
+        return summary
+
+    except Exception as e:
+        print(f"Error generating summary: {str(e)}")
+        # 如果出错，返回默认的 mock 数据
+        return {
+            }
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
