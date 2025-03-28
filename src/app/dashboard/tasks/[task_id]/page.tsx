@@ -25,7 +25,7 @@ async function getTask(task_id: string): Promise<Task | null> {
 
   return data
 }
- 
+
 
 interface SummaryData {
   status: string
@@ -41,10 +41,10 @@ async function getSummary(task_id: string): Promise<SummaryData | null> {
     }
 
     // 根据任务类型选择不同的API端点
-    const endpoint = task.type === 'User demand research' 
-      ? '/api/demand_summary' 
+    const endpoint = task.type === 'User demand research'
+      ? '/api/demand_summary'
       : '/api/feedback_summary'
-    
+
     const response = await fetch(`http://localhost:5000${endpoint}?task_id=${task_id}`)
     if (!response.ok) {
       throw new Error('Failed to fetch summary')
@@ -109,14 +109,15 @@ export default async function TaskReport({
                 <Label className="text-white/60">Conversation summary</Label>
                 <DownloadButton taskId={resolvedParams.task_id} />
               </div>
-              <SummaryDisplay 
+              <SummaryDisplay
                 summary={summary}
                 loading={false}
                 fallback="该任务暂无对话摘要"
               />
+              <div className="mt-6"></div>
               <PieComponent />
             </div>
-            <div className="bg-white/5 rounded-lg">
+            <div className="bg-white/5 rounded-lg h-[600px]">
               <Chat summary={summary?.summary ? JSON.stringify(summary.summary) : undefined} />
             </div>
           </div>

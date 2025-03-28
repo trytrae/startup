@@ -41,5 +41,5 @@ export function SummaryDisplay({
     })
     .join('\n\n')
 
-  return <Textarea value={summaryText} className="min-h-[200px]" disabled />
+  return <Textarea value={summaryText} className="min-h-[400px]" disabled />
 }
