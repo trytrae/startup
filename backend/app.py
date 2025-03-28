@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
+import json  # Add this import
 from supabase import create_client, Client
 from openai import OpenAI
 # from product_jeans_feedback_test import generate_feedback_summary_test  # 修改导入
@@ -258,10 +259,9 @@ def get_conversation():
             "message": str(e)
         }), 500
 
-@app.route('/api/summary', methods=['GET'])
-def get_summary():
+@app.route('/api/feedback_summary', methods=['GET'])
+def get_feedback_summary():
     try:
-        # 从请求参数中获取 task_id
         task_id = request.args.get('task_id')
         if not task_id:
             return jsonify({
@@ -269,27 +269,24 @@ def get_summary():
                 "message": "缺少 task_id 参数"
             }), 400
 
-        # 查询指定 task_id 的最新会话记录
         response = supabase.table('conversations') \
             .select("*") \
             .eq('task_id', task_id) \
             .order('created_at', desc=True) \
             .limit(1) \
             .execute()
-        print(task_id)
-        # 检查是否有数据返回
+        
         if response.data and response.data[0].get('summary'):
             return jsonify({
                 "status": "success",
                 "summary": response.data[0]['summary']
             })
         
-        # 如果没有 summary，生成新的总结
         if response.data:
             conversation = response.data[0].get('conversation', {})
  
             try:
-                summary = generate_summary_from_conversation(conversation)
+                summary = generate_feedback_summary(conversation)
                 print(summary)
             except Exception as e:
                 print(f"Error generating summary: {str(e)}")
@@ -299,7 +296,6 @@ def get_summary():
                     "市场潜力": "暂无数据"
                 }
             try:
-                # 更新最新会话记录的 summary 字段
                 supabase.table('conversations') \
                     .update({'summary': summary}) \
                     .eq('conversation_id', response.data[0]['conversation_id']) \
@@ -323,17 +319,75 @@ def get_summary():
             "message": str(e)
         }), 500
 
+@app.route('/api/demand_summary', methods=['GET'])
+def get_demand_summary():
+    try:
+        task_id = request.args.get('task_id')
+        if not task_id:
+            return jsonify({
+                "status": "error",
+                "message": "缺少 task_id 参数"
+            }), 400
 
-def generate_summary_from_conversation(conversation):
+        response = supabase.table('conversations') \
+            .select("*") \
+            .eq('task_id', task_id) \
+            .order('created_at', desc=True) \
+            .limit(1) \
+            .execute()
+        
+        if response.data and response.data[0].get('summary'):
+            return jsonify({
+                "status": "success",
+                "summary": response.data[0]['summary']
+            })
+        
+        if response.data:
+            conversation = response.data[0].get('conversation', {})
+            print(conversation)
+            try:
+                summary = generate_demand_summary(conversation)
+                print(summary)
+            except Exception as e:
+                print(f"Error generating summary: {str(e)}")
+                summary = {
+                    "关键反馈": ["生成摘要时发生错误"],
+                    "核心场景与需求": ["请稍后重试"],
+                    "新产品设计建议": "暂无数据"
+                }
+            try:
+                supabase.table('conversations') \
+                    .update({'summary': summary}) \
+                    .eq('conversation_id', response.data[0]['conversation_id']) \
+                    .execute()
+            except Exception as e:
+                print(f"Error updating summary: {str(e)}")
+            
+            return jsonify({
+                "status": "success",
+                "summary": summary
+            })
+        
+        return jsonify({
+            "status": "error",
+            "message": "未找到相关会话记录"
+        }), 404
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+
+def generate_feedback_summary(conversation):
     """
-    从对话内容生成总结
+    从对话内容生成产品反馈总结
     Args:
         conversation: 对话内容字典
     Returns:
         dict: 包含关键反馈、改进建议和市场潜力的总结
     """
     try:
-        # 检查 conversation 是否为空
         if not conversation:
             return {
                 "关键反馈": ["无有效对话内容"],
@@ -341,10 +395,7 @@ def generate_summary_from_conversation(conversation):
                 "市场潜力": "由于缺少对话数据，无法评估市场潜力"
             }
             
-        # 将对话内容转换为字符串
         conversation_text = str(conversation)
-
-        # 构建提示词
         prompt = f"""请分析以下用户反馈对话，并提供JSON格式的结构化总结：
 
         对话内容：
@@ -362,10 +413,9 @@ def generate_summary_from_conversation(conversation):
             "市场潜力": "市场潜力分析..."
         }}
 
-        绝对不要添加任何markdown的标记，比如“```json”，“```”等，只输出JSON格式的内容。
+        绝对不要添加任何markdown的标记，比如"```json"，"```"等，只输出JSON格式的内容。
         """
 
-        # 调用 DeepSeek API
         response = client.chat.completions.create(
             model="deepseek-chat",
             messages=[
@@ -381,11 +431,8 @@ def generate_summary_from_conversation(conversation):
             frequency_penalty=0.5,
         )
 
-        # 解析 API 响应
         summary_text = response.choices[0].message.content
         print(summary_text)
-        # 直接解析JSON响应
-        import json
         try:
             summary = json.loads(summary_text)
         except json.JSONDecodeError as e:
@@ -396,9 +443,73 @@ def generate_summary_from_conversation(conversation):
 
     except Exception as e:
         print(f"Error generating summary: {str(e)}")
-        # 如果出错，返回默认的 mock 数据
-        return {
+        return {}
+
+def generate_demand_summary(conversation):
+    """
+    从对话内容生成用户需求总结
+    Args:
+        conversation: 对话内容字典
+    Returns:
+        dict: 包含关键反馈、核心场景与需求和新产品设计建议的总结
+    """
+    try:
+        if not conversation:
+            return {
+                "关键反馈": ["无有效对话内容"],
+                "核心场景与需求": ["请确保有有效的对话数据"],
+                "新产品设计建议": "由于缺少对话数据，无法提供建议"
             }
+            
+        conversation_text = str(conversation)
+        prompt = f"""请分析以下用户需求调研对话，并提供JSON格式的结构化总结：
+
+        对话内容：
+        {conversation_text}
+
+        请以JSON格式输出分析结果，包含以下字段：
+        - 关键反馈：数组，包含3-5条用户关键反馈要点
+        - 核心场景与需求：数组，包含2-4条核心使用场景和用户需求
+        - 新产品设计建议：字符串，基于用户需求提供具体的产品设计建议
+
+        输出格式示例：
+        {{
+            "关键反馈": ["反馈1", "反馈2", "反馈3"],
+            "核心场景与需求": ["场景1", "场景2"],
+            "新产品设计建议": "产品设计建议内容..."
+        }}
+
+        绝对不要添加任何markdown的标记，比如"```json"，"```"等，只输出JSON格式的内容。
+        """
+
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a professional and perceptive consumer product planning and research expert, capable of accurately analyzing research interview content and organizing it in a comprehensive and logical manner using plain and concise language to extract key information. Please ensure your response is in valid JSON format."
+                },
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=512,
+            temperature=0.9,
+            top_p=0.7,
+            frequency_penalty=0.5,
+        )
+
+        summary_text = response.choices[0].message.content
+        print(summary_text)
+        try:
+            summary = json.loads(summary_text)
+        except json.JSONDecodeError as e:
+            print(f"Error parsing JSON response: {str(e)}")
+            raise
+
+        return summary
+
+    except Exception as e:
+        print(f"Error generating summary: {str(e)}")
+        return {}
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
