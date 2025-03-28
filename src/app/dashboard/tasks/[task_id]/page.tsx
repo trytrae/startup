@@ -8,6 +8,7 @@ import Chat from '@/components/dashboard/Chat'
 import { PieComponent } from '@/components/dashboard/chart-pie-label-custom'
 import { SummaryDisplay } from '@/components/dashboard/SummaryDisplay'
 import { DownloadButton } from '@/components/dashboard/DownloadButton'
+import { WordCloudChart } from '@/components/dashboard/WordCloudChart'
 
 
 async function getTask(task_id: string): Promise<Task | null> {
@@ -114,8 +115,14 @@ export default async function TaskReport({
                 loading={false}
                 fallback="该任务暂无对话摘要"
               />
-              <div className="mt-6"></div>
-              <PieComponent />
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                <div>
+                  <WordCloudChart />
+                </div>
+                <div>
+                  <PieComponent />
+                </div>
+              </div>
             </div>
             <div className="bg-white/5 rounded-lg h-[600px]">
               <Chat summary={summary?.summary ? JSON.stringify(summary.summary) : undefined} />
