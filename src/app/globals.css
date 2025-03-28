@@ -94,3 +94,12 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: 'Oswald HeavyItalic';
+  src: url('/fonts/Oswald-HeavyItalic.woff2') format('woff2'),
+       url('/fonts/Oswald-HeavyItalic.woff') format('woff');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}

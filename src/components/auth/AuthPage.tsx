@@ -2,9 +2,16 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { Oswald } from 'next/font/google'
 import AuthForm from './AuthForm'
 import Link from 'next/link'
 import Image from 'next/image'
+
+const oswald = Oswald({
+  subsets: ['latin'],
+  weight: ['700'],
+  style: ['normal'],
+})
 
 function AuthContent() {
   const searchParams = useSearchParams()
@@ -36,7 +43,7 @@ function AuthContent() {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
               <Image src="/logo.svg" alt="Logo" width={32} height={32} priority />
-              <span className="text-white font-bold text-xl">Convolens</span>
+              <span className={`text-[#FFBE1A] font-bold text-xl italic ${oswald.className} transform skew-x-[-12deg]`}>ConvoLens</span>
             </Link>
 
             {/* Navigation */}

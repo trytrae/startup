@@ -81,12 +81,6 @@ convolens/
   - ESLint for code linting
   - Prettier for code formatting
   - TypeScript for type safety
-
-- **Git Hooks**
-  - Husky for Git hooks
-  - lint-staged for staged files linting
-
- 
  
 ## 🙏 Acknowledgments
 
