@@ -72,7 +72,7 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <div className="flex items-center">
-              <span className={`text-[#FFBE1A] font-bold text-xl tracking-wider italic ${oswald.className} transform skew-x-[-12deg]`}>ConvoLens</span>
+              <span className={`text-[#FFBE1A] font-bold text-xl tracking-wider ${oswald.className}`}>ConvoLens</span>
               <span className="mx-2 text-white/40">|</span>
               <span className="text-white/60 text-sm font-light italic">Illuminating Insights Through Consumer Conversations</span>
             </div>

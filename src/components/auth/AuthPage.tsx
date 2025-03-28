@@ -43,7 +43,7 @@ function AuthContent() {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-2">
               <Image src="/logo.svg" alt="Logo" width={32} height={32} priority />
-              <span className={`text-[#FFBE1A] font-bold text-xl italic ${oswald.className} transform skew-x-[-12deg]`}>ConvoLens</span>
+              <span className={`text-[#FFBE1A] font-bold text-xl ${oswald.className}`}>ConvoLens</span>
             </Link>
 
             {/* Navigation */}
