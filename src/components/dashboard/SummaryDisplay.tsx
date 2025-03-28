@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -10,30 +10,15 @@ interface SummaryData {
 }
 
 export function SummaryDisplay({ 
-  taskId,
-  fallback = "暂无摘要数据"  // 添加 fallback 属性
+  summary,
+  loading = false,
+  fallback = "暂无摘要数据"
 }: { 
-  taskId: string
+  summary: SummaryData | null
+  loading?: boolean
   fallback?: string 
 }) {
-  const [loading, setLoading] = useState(true)
-  const [summary, setSummary] = useState<SummaryData | null>(null)
-
-  useEffect(() => {
-    const fetchSummary = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/api/summary?task_id=${taskId}`)
-        const data = await response.json()
-        setSummary(data)
-      } catch (error) {
-        console.error('Error fetching summary:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchSummary()
-  }, [taskId])
+  // 移除了useEffect和fetch逻辑
 
   if (loading) {
     return (
@@ -56,5 +41,5 @@ export function SummaryDisplay({
     })
     .join('\n\n')
 
-  return <Textarea value={summaryText} className="min-h-[200px]" disabled />
+  return <Textarea value={summaryText} className="min-h-[400px]" disabled />
 }

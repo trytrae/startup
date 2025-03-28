@@ -2,8 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { Oswald } from 'next/font/google'
 import { signOut, getCurrentUser, fetchHealthCheck } from './actions'
 import { Label } from '../ui/label'
+
+const oswald = Oswald({
+  subsets: ['latin'],
+  weight: ['700'],
+  style: ['normal'],
+})
 
 interface User {
   id: string
@@ -64,9 +71,11 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-white font-bold text-xl">
-            ConvoLens - Illuminating Insights Through Consumer Conversations
-            </Link>
+            <div className="flex items-center">
+              <span className={`text-[#FFBE1A] font-bold text-xl tracking-wider ${oswald.className}`}>ConvoLens</span>
+              <span className="mx-2 text-white/40">|</span>
+              <span className="text-white/60 text-sm font-light italic">Illuminating Insights Through Consumer Conversations</span>
+            </div>
           </div>
           
           <div className="flex items-center space-x-4">
