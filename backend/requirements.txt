@@ -3,5 +3,5 @@ flask-cors==4.0.0
 python-dotenv==1.0.0
 supabase
 camel-ai==0.2.16
-# dappier # [optical]
 pillow
+gunicorn==21.2.0  # 添加这一行
