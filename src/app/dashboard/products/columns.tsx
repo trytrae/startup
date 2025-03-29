@@ -27,15 +27,63 @@ export type Product = {
     create_at: string
   }
 
-export const columns: ColumnDef<Product>[] = [
-  {
-    accessorKey: "product_id",  // 从 id 改为 product_id
-    header: "Product Id",
-    cell: ({ row }) => {
-      const value = row.getValue("product_id") as string  // 从 id 改为 product_id
-      return <div className="min-w-[100px] w-full truncate">{value}</div>
+// Create a component for the actions cell to properly use hooks
+function ActionCell({ product }: { product: Product }) {
+  const router = useRouter()
+  
+  const handleDelete = async () => {
+    try {
+      const supabase = createClient()
+      const { error } = await supabase
+        .from('products')
+        .delete()
+        .eq('product_id', product.product_id)  // 从 id 改为 product_id
+
+      if (error) throw error
+      
+      router.refresh()
+    } catch (error) {
+      console.error('Error deleting product:', error)
     }
-  },
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Label className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Label>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem
+          onClick={() => navigator.clipboard.writeText(product.product_id)}  // 从 id 改为 product_id
+        >
+          Check Details
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DialogNewProduct product={product} mode="edit" />
+        <DropdownMenuItem 
+          onClick={handleDelete}
+          className="text-red-600 focus:text-red-600"
+        >
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
+export const columns: ColumnDef<Product>[] = [
+  // {
+  //   accessorKey: "product_id",  // 从 id 改为 product_id
+  //   header: "Product Id",
+  //   cell: ({ row }) => {
+  //     const value = row.getValue("product_id") as string  // 从 id 改为 product_id
+  //     return <div className="min-w-[100px] w-full truncate">{value}</div>
+  //   }
+  // },
   {
     accessorKey: "name",
     header: "Product Name",
@@ -90,50 +138,7 @@ export const columns: ColumnDef<Product>[] = [
     id: "actions",
     cell: ({ row }) => {
       const product = row.original
-      const router = useRouter()
-      
-      const handleDelete = async () => {
-        try {
-          const supabase = await createClient()
-          const { error } = await supabase
-            .from('products')
-            .delete()
-            .eq('product_id', product.product_id)  // 从 id 改为 product_id
-
-          if (error) throw error
-          
-          router.refresh()
-        } catch (error) {
-          console.error('Error deleting product:', error)
-        }
-      }
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Label className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Label>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.product_id)}  // 从 id 改为 product_id
-            >
-              Check Details
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DialogNewProduct product={product} mode="edit" />
-            <DropdownMenuItem 
-              onClick={handleDelete}
-              className="text-red-600 focus:text-red-600"
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+      return <ActionCell product={product} />
     },
   },
 ]

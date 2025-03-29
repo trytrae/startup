@@ -30,14 +30,14 @@ export type Task = {
 }
 
 export const columns: ColumnDef<Task>[] = [
-  {
-    accessorKey: "task_id",  // 从 id 改为 task_id
-    header: "Task Id",
-    cell: ({ row }) => {
-      const value = row.getValue("task_id") as string  // 从 id 改为 task_id
-      return <div className="min-w-[100px] w-full truncate">{value}</div>
-    }
-  },
+  // {
+  //   accessorKey: "task_id",  // 从 id 改为 task_id
+  //   header: "Task Id",
+  //   cell: ({ row }) => {
+  //     const value = row.getValue("task_id") as string  // 从 id 改为 task_id
+  //     return <div className="min-w-[100px] w-full truncate">{value}</div>
+  //   }
+  // },
   {
     accessorKey: "name",
     header: "Task Name",
@@ -104,56 +104,61 @@ export const columns: ColumnDef<Task>[] = [
     id: "actions",
     cell: ({ row }) => {
       const task = row.original
-      const router = useRouter()
-      
-      const handleDelete = async () => {
-        try {
-          const supabase = createClient()
-          const { error } = await supabase
-            .from('tasks')
-            .delete()
-            .eq('task_id', task.task_id)  // 从 id 改为 task_id
-
-          if (error) throw error
-          
-          router.refresh()
-        } catch (error) {
-          console.error('Error deleting task:', error)
-        }
-      }
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Label className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Label>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => {
-                if (task.status === 'success') {
-                  router.push(`/dashboard/tasks/${task.task_id}`)
-                }
-              }}
-              disabled={task.status !== 'success'}
-              className={task.status !== 'success' ? 'cursor-not-allowed opacity-50' : ''}
-            >
-              Task Report
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DialogNewTask task={task} mode="edit" />
-            <DropdownMenuItem 
-              onClick={handleDelete}
-              className="text-red-600 focus:text-red-600"
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+      return <ActionCell task={task} />
     },
   },
 ]
+
+
+// Create a component for the actions cell to properly use hooks
+function ActionCell({ task }: { task: Task }) {
+  const router = useRouter()
+      
+  const handleDelete = async () => {
+    try {
+      const supabase = createClient()
+      const { error } = await supabase
+        .from('tasks')
+        .delete()
+        .eq('task_id', task.task_id)  // 从 id 改为 task_id
+
+      if (error) throw error
+      
+      router.refresh()
+    } catch (error) {
+      console.error('Error deleting task:', error)
+    }
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Label className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Label>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+        <DropdownMenuItem
+          onClick={() => {
+            if (task.status === 'success') {
+              router.push(`/dashboard/tasks/${task.task_id}`)
+            }
+          }}
+          disabled={task.status !== 'success'}
+          className={task.status !== 'success' ? 'cursor-not-allowed opacity-50' : ''}
+        >
+          Task Report
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DialogNewTask task={task} mode="edit" />
+        <DropdownMenuItem 
+          onClick={handleDelete}
+          className="text-red-600 focus:text-red-600"
+        >
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )}

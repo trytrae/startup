@@ -31,7 +31,8 @@ import { group } from "console"
 
 
 export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: 'create' | 'edit' }) {
-    const supabase = createClient()
+    // 将 supabase 客户端创建移到 useEffect 外部并使用 useMemo
+    const supabase = React.useMemo(() => createClient(), []);
     const router = useRouter()
     const [open, setOpen] = useState(false)
     // 添加新的状态
@@ -76,7 +77,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
         }
 
         fetchData()
-    }, [])
+    }, [supabase])
     const [formData, setFormData] = useState({
         task_id: task?.task_id || uuidv4(),  // 从 id 改为 task_id
         name: task?.name || '',

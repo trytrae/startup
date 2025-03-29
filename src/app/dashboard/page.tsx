@@ -9,25 +9,25 @@ export default function Dashboard() {
   const supabase = createClient()
 
   useEffect(() => {
-    fetchProfile()
-  }, [fetchProfile])
-
-  async function fetchProfile() {
-    try {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single()
-        
-        if (data) setProfile(data)
+    async function fetchProfile() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const { data } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', user.id)
+            .single()
+          
+          if (data) setProfile(data)
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error)
       }
-    } catch (error) {
-      console.error('Error fetching profile:', error)
     }
-  }
+
+    fetchProfile()
+  }, [supabase]) // Add supabase as a dependency
 
   return (
     <div className="space-y-8">
