@@ -17,7 +17,7 @@ from getpass import getpass
 load_dotenv()
 
 os.environ["QWEN_API_KEY"] = os.getenv('QWEN_API_KEY')
-chat_round=1
+chat_round=3
 # set model
 qwenModel = ModelFactory.create(
     model_platform = ModelPlatformType.QWEN,
@@ -100,7 +100,7 @@ def conduct_user_demand_research(user_profiles):
     进行用户需求调研
     
     Args:
-        user_profiles (list): 用户档案列表
+        user_profiles (list): 消费者档案列表
     
     Returns:
         dict: 包含所有对话结果的字典
@@ -111,26 +111,27 @@ def conduct_user_demand_research(user_profiles):
     }
 
     for consumer_profile_i in user_profiles:
+        # 下面得user是AI 企划
         print(f"\n开始与{consumer_profile_i['城市']}的{consumer_profile_i['职业']}妈妈对话...\n")
         consumer_info_i = create_user_info(consumer_profile_i)
 
         in_model = qwenModel
         in_assistant_agent_kwargs_sys_message = \
             consumer_info_i + """
-            你性格开朗真诚,喜欢分享生活。正在接受一份用户调研, 过程中需要像跟朋友聊天一样自然, 
-            可以结合自己的兴趣爱好和生活经历来分享穿搭心得, 通过闲聊的方式表达真实想法。""" ,
+            你性格开朗真诚,喜欢分享生活。正在接受一份消费者调研, 过程中需要像跟朋友聊天一样自然, 
+            可以结合自己的兴趣爱好、生活经历来回答调研问题。请不要提问和指导对方。""" ,
         in_assistant_role_name = f"{consumer_profile_i['职业']}妈妈, {in_assistant_agent_kwargs_sys_message}", 
 
         in_user_agent_kwargs_sys_message = """
-            你是一位童装品牌的产品企划,性格温和友善,善于通过轻松自然的对话方式了解消费者需求。
-            现在你想为针对妈妈们开发一些简约舒适的服装, 将和目标用户开展一次用户调研对话。
-            过程中多分享一些个人经历和见解,让对话更有温度。要记住每位妈妈的背景特点,适时引用她们的兴趣爱好和生活方式来拉近距离。
+            你是一位服装品牌的产品企划,性格温和友善,善于通过轻松自然的对话方式了解消费者需求。
+            现在你想以妈妈为目标消费群体开发一些舒适得体的服装, 将和目标消费者开展一次调研对话。
+            过程中要记住每位妈妈的背景特点,适时引用她们的兴趣爱好和生活方式来拉近距离。
             同时要巧妙地将对话引导到调研目标上,但不要显得过于刻意。""",
-        user_sim = "来自某童装品牌产品企业规划部门的产品调研负责人"
+        user_sim = "产品企划部门的产品调研负责人"
         in_user_role_name = f"{user_sim},  {in_user_agent_kwargs_sys_message}",
 
         # import pdb;pdb.set_trace()
-        in_task_prompt = f"""现在有一位{user_sim}和一位{consumer_profile_i['职业']}妈妈用户, 两者需要进行亲切对话, 从而帮助{user_sim}调研用户对成年女性牛仔裤的真实需求. 具体需要了解以下几点:
+        in_task_prompt = f"""一家服装品牌正在开拓女装产品线，期望为妈妈群体设计舒适得体的衣服。现在有一位{user_sim}和一位{consumer_profile_i['职业']}妈妈用户, 两者需要进行亲切对话, 从而帮助{user_sim}了解消费者对成年女性牛仔裤的真实需求. 具体需要了解以下几点:
             1. 妈妈本人日常中哪些场景会穿着牛仔裤; 
             2. 妈妈本人在这些场景下经常穿着的牛仔裤是怎样的; 
             3. 妈妈本人期待的牛仔裤需要满足哪些特点; 
@@ -148,24 +149,12 @@ def conduct_user_demand_research(user_profiles):
         )
 
         conversation_entry = {
-            "user_profile": consumer_profile_i,
+            "consumer_profile": consumer_profile_i,
             "conversation_details": res
         }
         all_conversations["conversations"].append(conversation_entry)
 
     return all_conversations
-
-if __name__ == "__main__":
-    user_profiles = get_user_profiles()
-    
-    all_conversations = conduct_user_demand_research(
-        user_profiles=user_profiles
-    )
-
-    # 保存结果到文件
-    import json
-    with open('user_demand_results.json', 'w', encoding='utf-8') as f:
-        json.dump(all_conversations, f, ensure_ascii=False, indent=4)
 
 
 
@@ -203,5 +192,21 @@ def create_user_info(profile):
     history_purchases = "\n ".join([f"{i+1}. {item}" for i, item in enumerate(profile["历史购买"])])
     return f"""你是一位妈妈, 在{profile["城市"]}做{profile["职业"]}工作, 日常喜欢{profile["生活方式"]}, 
             有一个{profile["孩子年龄"]}的孩子, 每年在童装上的花费是{profile["童装花费"]}。你购买过的童装包括: {history_purchases}"""
+
+
+
+
+
+if __name__ == "__main__":
+    user_profiles = get_user_profiles()
+    
+    all_conversations = conduct_user_demand_research(
+        user_profiles=user_profiles
+    )
+
+    # 保存结果到文件
+    import json
+    with open('user_demand_results.json', 'w', encoding='utf-8') as f:
+        json.dump(all_conversations, f, ensure_ascii=False, indent=4)
 
 
