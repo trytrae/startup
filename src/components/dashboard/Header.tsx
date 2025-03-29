@@ -54,17 +54,17 @@ export default function Header() {
     )
   }
 
-  const fetchHealthCheck = async () => {
-    console.log('开始请求健康检查接口...');  // 调试日志
-    try {
-      const response = await fetch('http://localhost:5000/api/health');
-      console.log('收到响应:', response);  // 调试日志
-      const data = await response.json();
-      console.log('解析后的数据:', data);  // 调试日志
-    } catch (error) {
-      console.error('请求出错:', error);
-    }
-  };
+  // const fetchHealthCheck = async () => {
+  //   console.log('开始请求健康检查接口...');  // 调试日志
+  //   try {
+  //     const response = await fetch('http://localhost:5000/api/health');
+  //     console.log('收到响应:', response);  // 调试日志
+  //     const data = await response.json();
+  //     console.log('解析后的数据:', data);  // 调试日志
+  //   } catch (error) {
+  //     console.error('请求出错:', error);
+  //   }
+  // };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0A] border-b border-white/10">

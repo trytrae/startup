@@ -27,10 +27,13 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 import { useRouter } from "next/navigation"
 import { v4 as uuidv4 } from 'uuid'
 import { group } from "console"
+import { useToast } from "@/hooks/use-toast"
 
 
 
 export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: 'create' | 'edit' }) {
+    const { toast } = useToast()
+    const [isLoading, setIsLoading] = useState(false)
     // 将 supabase 客户端创建移到 useEffect 外部并使用 useMemo
     const supabase = React.useMemo(() => createClient(), []);
     const router = useRouter()
@@ -90,6 +93,7 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
     })
     
     const handleSubmit = async () => {
+        setIsLoading(true)
         try {
             // Prepare the data before saving
             const dataToSave = {
@@ -114,10 +118,15 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                 if (error) throw error
             }
 
+            toast({
+                title: "Task Created",
+                description: "Waiting for AI processing, this may take a few minutes...",
+            })
+
             // 发送数据到 Flask 后端
             const apiUrl = formData.type === 'User demand research' 
-                ? 'http://localhost:5000/api/user_demand'
-                : 'http://localhost:5000/api/jeans-feedback';
+                ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user_demand`
+                : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/jeans-feedback`;
                 
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -132,6 +141,12 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
             if (!response.ok) {
                 throw new Error('Failed to send data to backend');
             }
+
+            toast({
+                title: "Processing Complete",
+                description: "AI analysis has been completed",
+                variant: "default",
+            })
 
             // 清空表单并刷新页面
             setFormData({
@@ -148,6 +163,13 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
             router.refresh()
         } catch (error) {
             console.error('Error saving task:', error)
+            toast({
+                title: "Error",
+                description: "An error occurred while saving the task",
+                variant: "destructive",
+            })
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -265,7 +287,13 @@ export function DialogNewTask({ task, mode = 'create' }: { task?: Task, mode?: '
                     </div>)}
                 </div>
                 <DialogFooter>
-                    <Button type="submit" onClick={handleSubmit}>Save</Button>
+                    <Button 
+                        type="submit" 
+                        onClick={handleSubmit} 
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "处理中..." : "保存"}
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
