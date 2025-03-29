@@ -26,7 +26,8 @@ import {
 } from "@/components/ui/select"
 
 export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: 'create' | 'edit' }) {
-    const supabase = createClient()
+    // 将 supabase 客户端创建移到 useEffect 外部并使用 useMemo
+    const supabase = React.useMemo(() => createClient(), []);
     const router = useRouter()
     const [open, setOpen] = useState(false)
     // 添加群组列表状态
@@ -106,7 +107,7 @@ export function DialogNewUser({ user, mode = 'create' }: { user?: User, mode?: '
         }
 
         fetchGroups()
-    }, [])
+    }, [supabase])
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

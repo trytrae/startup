@@ -1,25 +1,29 @@
 'use client'
 
-import { useEffect, useState, use } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { createClient } from '@/utils/supabase/client'
 import { DataTable } from './data-table'
 import {User, userColumns } from './columns'
 import Link from 'next/link'
 
-export default function GroupUsers({ params }: { params: { group_id: string } }) {
-  const resolvedParams = use(params)
+// 修改组件定义，使用正确的 Next.js App Router 页面参数类型
+type Props = {
+  params: { group_id: string }
+}
+
+export default function GroupUsers({ params }: Props) {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [groupName, setGroupName] = useState('')
-  const supabase = createClient()
-
+  const supabase = useMemo(() => createClient(), []);
+  
   useEffect(() => {
     async function fetchData() {
       try {
         const { data, error } = await supabase
           .from('users')
           .select('*')
-          .eq('group_id', resolvedParams.group_id)
+          .eq('group_id', params.group_id)
 
         if (error) throw error
         setUsers(data || [])
@@ -27,7 +31,7 @@ export default function GroupUsers({ params }: { params: { group_id: string } })
         const { data: groupData, error: groupError } = await supabase
           .from('usergroup')
           .select('group_name')
-          .eq('group_id', resolvedParams.group_id)
+          .eq('group_id', params.group_id)
           .single()
 
         if (groupError) throw groupError
@@ -41,7 +45,7 @@ export default function GroupUsers({ params }: { params: { group_id: string } })
     }
 
     fetchData()
-  }, [resolvedParams.group_id])
+  }, [params.group_id, supabase])
 
   if (loading) {
     return <div>Loading...</div>
