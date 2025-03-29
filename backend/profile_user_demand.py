@@ -131,7 +131,8 @@ def conduct_user_demand_research(user_profiles):
         in_user_role_name = f"{user_sim},  {in_user_agent_kwargs_sys_message}",
 
         # import pdb;pdb.set_trace()
-        in_task_prompt = f"""一家服装品牌正在开拓女装产品线，期望为妈妈群体设计舒适得体的衣服。现在有一位{user_sim}和一位{consumer_profile_i['职业']}妈妈用户, 两者需要进行亲切对话, 从而帮助{user_sim}了解消费者对成年女性牛仔裤的真实需求. 具体需要了解以下几点:
+        # import pdb;pdb.set_trace()
+        in_task_prompt = f"""现在有一位{user_sim}和一位{consumer_profile_i['职业']}妈妈用户, 请模仿两个人进行对话的场景, 从而帮助{user_sim}调研用户对成年女性牛仔裤的真实需求. 具体需要了解以下几点:
             1. 妈妈本人日常中哪些场景会穿着牛仔裤; 
             2. 妈妈本人在这些场景下经常穿着的牛仔裤是怎样的; 
             3. 妈妈本人期待的牛仔裤需要满足哪些特点; 
@@ -190,8 +191,8 @@ def get_user_profiles():
 
 def create_user_info(profile):
     history_purchases = "\n ".join([f"{i+1}. {item}" for i, item in enumerate(profile["历史购买"])])
-    return f"""你是一位妈妈, 在{profile["城市"]}做{profile["职业"]}工作, 日常喜欢{profile["生活方式"]}, 
-            有一个{profile["孩子年龄"]}的孩子, 每年在童装上的花费是{profile["童装花费"]}。你购买过的童装包括: {history_purchases}"""
+    return f"""你是一位妈妈, 在{profile["城市"]}做{profile["职业"]}工作, 日常喜欢{profile["生活方式"]}, """
+            # 有一个{profile["孩子年龄"]}的孩子, 每年在童装上的花费是{profile["童装花费"]}。你购买过的童装包括: {history_purchases}"""
 
 
 
@@ -208,5 +209,3 @@ if __name__ == "__main__":
     import json
     with open('user_demand_results.json', 'w', encoding='utf-8') as f:
         json.dump(all_conversations, f, ensure_ascii=False, indent=4)
-
-
