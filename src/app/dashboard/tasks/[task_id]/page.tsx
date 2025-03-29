@@ -35,18 +35,16 @@ interface SummaryData {
 
 async function getSummary(task_id: string): Promise<SummaryData | null> {
   try {
-    // 首先获取任务信息
     const task = await getTask(task_id)
     if (!task) {
       throw new Error('Task not found')
     }
 
-    // 根据任务类型选择不同的API端点
     const endpoint = task.type === 'User demand research'
       ? '/api/demand_summary'
       : '/api/feedback_summary'
 
-    const response = await fetch(`http://localhost:5000${endpoint}?task_id=${task_id}`)
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}${endpoint}?task_id=${task_id}`)
     if (!response.ok) {
       throw new Error('Failed to fetch summary')
     }

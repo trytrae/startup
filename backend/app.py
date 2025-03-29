@@ -277,6 +277,7 @@ def get_feedback_summary():
             .execute()
         
         if response.data and response.data[0].get('summary'):
+            print('success')
             return jsonify({
                 "status": "success",
                 "summary": response.data[0]['summary']
