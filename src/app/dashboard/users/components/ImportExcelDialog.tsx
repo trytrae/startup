@@ -32,7 +32,6 @@ import { useRouter } from 'next/navigation'
 import { v4 as uuidv4 } from 'uuid'
 
 interface ImportData {
-    user_id: string
     city: string
     occupation: string
     child_age: number
@@ -100,7 +99,6 @@ export function ImportExcelDialog({ onRefresh }: ImportExcelDialogProps) {
 
         const validatedData = data.map(row => {
             const errors = []
-            if (!row.user_id) errors.push('用户ID不能为空')
             if (!row.city) errors.push('城市不能为空')
             if (!row.occupation) errors.push('职业不能为空')
             if (!row.child_age || !Number.isInteger(row.child_age) || row.child_age < 1 || row.child_age > 18) errors.push('孩子年龄无效');
@@ -138,7 +136,6 @@ export function ImportExcelDialog({ onRefresh }: ImportExcelDialogProps) {
         const template = XLSX.utils.book_new()
         const templateData = [
             {
-                user_id: '',
                 city: '',
                 occupation: '',
                 child_age: '',
@@ -182,6 +179,7 @@ export function ImportExcelDialog({ onRefresh }: ImportExcelDialogProps) {
                 .filter(user => !user.validation)
                 .map(user => ({
                     ...user,
+                    user_id: uuidv4(),
                     group_id: newGroup.group_id
                 }))
 
@@ -270,7 +268,6 @@ export function ImportExcelDialog({ onRefresh }: ImportExcelDialogProps) {
                                     <Table>
                                         <TableHeader className="sticky top-0 bg-background z-10">
                                             <TableRow>
-                                                <TableHead>user_id</TableHead>
                                                 <TableHead>city</TableHead>
                                                 <TableHead>occupation</TableHead>
                                                 <TableHead>age</TableHead>
@@ -287,7 +284,6 @@ export function ImportExcelDialog({ onRefresh }: ImportExcelDialogProps) {
                                         <TableBody>
                                             {importData.map((row, index) => (
                                                 <TableRow key={index}>
-                                                    <TableCell>{row.user_id}</TableCell>
                                                     <TableCell>{row.city}</TableCell>
                                                     <TableCell>{row.occupation}</TableCell>
                                                     <TableCell>{row.child_age}</TableCell>
