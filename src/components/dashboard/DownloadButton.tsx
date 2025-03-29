@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button"
 async function downloadConversation(taskId: string) {
   try {
     // Update the API endpoint to point to the Flask backend
-    const response = await fetch(`http://localhost:5000/api/conversation?task_id=${taskId}`);
+ 
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/conversation?task_id=${taskId}`);
     const data = await response.json();
     
     if (data.status === 'success') {
